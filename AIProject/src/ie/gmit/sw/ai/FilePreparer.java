@@ -6,6 +6,7 @@ import java.nio.file.*;
 
 public class FilePreparer {
 	
+	// Read the file
 	public String readFile(Path file) {
 		String fileString = "";
 		

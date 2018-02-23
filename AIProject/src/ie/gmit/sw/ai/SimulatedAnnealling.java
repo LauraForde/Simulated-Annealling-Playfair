@@ -22,6 +22,15 @@ public class SimulatedAnnealling {
 	 * 	   // end for temp 
 	 */
 	
+	// SimulatedAnnealling
+	public void simulatedAnnealingBreak() {
+		// Generate a random 25 letter key called parent
+		char key[] = "THEQUICKBROWNFXMPDVLAZYGS".toCharArray(); // to char array - https://stackoverflow.com/a/11711248
+		char parent[] = shuffle(key);
+		
+		// Decrypt using key
+	}
+	
 	// Fisher-Yates Shuffle, O(n) time complexity
 	public char[] shuffle(char[] key) {
 		int index;

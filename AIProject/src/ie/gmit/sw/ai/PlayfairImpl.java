@@ -22,4 +22,20 @@ public class PlayfairImpl {
 		return str.toString();
 	}
 
+	// Step 2 - Break the plain text into digraphs
+	// "ARTIFICIAL" becomes [AR, TI, FI, CI, AL]
+	public String[] makeDigraphs(String string) {
+    
+		// Create a new string array of length [half of given string] - String of length 100 becomes array of 50 (2 chars per digraph)
+        String digraphs[] = new String[string.length() / 2];
+        int index = 0;
+
+        for (int i = 0; i < digraphs.length; i++) { // 
+        	digraphs[index] = string.substring(i, i + 2); // Assign substring (current char -> +2) to digraph[] element at current index  
+            index = index + 2;
+        }
+        
+        return digraphs;
+	}
+
 }

@@ -5,6 +5,7 @@ package ie.gmit.sw.ai;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 // Runner class - doesn't actually do anything, just calls other classes/methods
 public class CipherBreaker {
@@ -25,6 +26,8 @@ public class CipherBreaker {
 		PlayfairImpl pf = new PlayfairImpl();
 		String primedText = pf.primePlainTxt(fp.readFile(path));
 		System.out.println("\n1. Primed Text: " + primedText);
+		String[] digraphs = pf.makeDigraphs(primedText);
+		System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
 		
 	}
 }
