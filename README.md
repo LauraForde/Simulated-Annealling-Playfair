@@ -12,7 +12,7 @@ and n-gram statistics as a heuristic evaluation function.
 #### Breakdown of Marks / 100  
 
 **60** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Robustness. The application executes correctly.  
-**15** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Packaging & Distribution  
+**15** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Packaging & Distribution  
 **25** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Documented (and relevant) extras.  
   
 *Project due Sunday 8th April*
