@@ -1,6 +1,20 @@
 # Compiled class file
 *.class
 
+# Eclipse stuff
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
 # Log file
 *.log
 
