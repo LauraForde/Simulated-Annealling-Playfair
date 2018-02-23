@@ -11,21 +11,20 @@ public class CipherBreaker {
 
 	public static void main(String[] args) {
 		SimulatedAnnealling sa = new SimulatedAnnealling();
-		/*char key[] = "THEQUICKBROWNFXMPDVLAZYGS".toCharArray(); // to char array - https://stackoverflow.com/a/11711248
-		System.out.println("shuffling THEQUICKBROWNFXMPDVLAZYGS");
-		System.out.print("new key: ");
-		System.out.print(sa.shuffle(key));*/
+		
 		
 		FilePreparer fp = new FilePreparer();
 		String filename = "EncryptedExamTips.txt";
-		System.out.println("Working Directory = " + System.getProperty("user.dir")); // Get current directory, adapted from https://stackoverflow.com/a/7603444
+		//System.out.println("Working Directory = " + System.getProperty("user.dir")); // Get current directory, adapted from https://stackoverflow.com/a/7603444
 		Path path = FileSystems.getDefault().getPath(filename);
-		System.out.println("Path: " + path);
-		char file[] = fp.readFile(path).toCharArray();
-		System.out.print("File: " + fp.readFile(path) + "\nShuffled: ");
-		System.out.print(sa.shuffle(file));
+		//System.out.println("Path: " + path);
+		//char file[] = fp.readFile(path).toCharArray();
+		System.out.println("File: " + fp.readFile(path));
+		//System.out.print(sa.shuffle(file));
 		
-		
+		PlayfairImpl pf = new PlayfairImpl();
+		String primedText = pf.primePlainTxt(fp.readFile(path));
+		System.out.println("\n1. Primed Text: " + primedText);
 		
 	}
 }
