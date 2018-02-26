@@ -30,9 +30,14 @@ public class PlayfairImpl {
         String digraphs[] = new String[string.length() / 2];
         int index = 0;
 
-        for (int i = 0; i < digraphs.length; i++) { // 
+        for (int i = 0; i < string.length(); i = i + 2) {
+        // Using digraph length doesn't seem to work, will try string / 2
+        //for (int i = 0; i < digraphs.length; i++) { 
+        	//digraphs[index] = string.substring(i, i + 2); // Assign substring (current char -> +2) to digraph[] element at current index  
+           // index = index + 2;
+        	
         	digraphs[index] = string.substring(i, i + 2); // Assign substring (current char -> +2) to digraph[] element at current index  
-            index = index + 2;
+        	index++;
         }
         
         return digraphs;
