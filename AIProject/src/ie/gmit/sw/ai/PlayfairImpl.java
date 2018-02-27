@@ -2,6 +2,7 @@ package ie.gmit.sw.ai;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 public class PlayfairImpl {
@@ -65,7 +66,7 @@ public class PlayfairImpl {
 	*/
 	
 	public static char[][] generateMatrix(String keystr) {
-		char[][] matrix = new char[5][5];
+		/*char[][] matrix = new char[5][5];
 		char[] key = keystr.toCharArray();
 		int k = 0; // index in key
 		for (int i = 0; i < 5; i++) {
@@ -73,63 +74,26 @@ public class PlayfairImpl {
 				matrix[i][j] = key[k];
 				k++;
 			}
-		}
+		}*/
 		
-		// TESTING ---------- loops through matrix array to output contents
+		/* TESTING ---------- loops through matrix array to output contents
+		System.out.println();
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				System.out.print(matrix[i][j] + " ");
 			}
 			System.out.println();
-		}
+		}*/
 		
-		return matrix;
+		return null; //matrix;
     }
 	
 	public static StringBuilder decrypt(char[][] matrix, String[] digraphs) {
-		StringBuilder plainText = new StringBuilder(); // Decrypted text
+		// Running into trouble... better to just work with string matrix???? Array too complex..?
+		// Can surely do calculations on "THEQUICKBROWNFXMPDVLAZYGS" to get "location"... maybe. Will try that out
 		
-		// Decrypt using rules above with given matrix
-		// Matrix will differ each time when Simulated Annealling implemented, working with basic quick brown fox matrix for now
-		
-		for (String digraph : digraphs) { // For each digraph in the digraph array
-            char[] pair = digraph.toCharArray();
-            
-            // using hashmap to store key value pair - https://beginnersbook.com/2013/12/hashmap-in-java-with-example/
-            HashMap<Character, Integer[]> map = new HashMap<Character, Integer[]>();
-            
-            for (char p : pair) {
-            	// i j starting at 1, matrix normally read as 1, 5 etc not 0, 4?
-            	for (int i = 0; i < 5; i++) {
-	                for (int j = 0; j < 5; j++) {
-	                    if (matrix[i][j] == p) {
-	                    	Integer[] location = {i + 1, j + 1};
-	                    	//System.out.print(p + ": " +  Arrays.toString(location) + "\t ");
-	                    	map.put(p, location); // Add the char and its location in the matrix to the map
-	                    }
-	                    	
-	                }
-	            }
-			}
-            
-            // Adapted from https://stackoverflow.com/a/3605320, just to make sure map is right
-            for (Entry<Character, Integer[]> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + ": " + Arrays.toString(entry.getValue()));
-            }
-            
-            
-            //if(pair[0]) {
+		return null;
 
-            // } else if in the same column {
-
-            // } else different rows {
-
-            //}
-            // plainText.append(new pair);
-        }
-		
-		return plainText; 
-		
 	}
 	
 }
