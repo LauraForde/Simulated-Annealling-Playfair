@@ -1,5 +1,8 @@
 package ie.gmit.sw.ai;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class PlayfairMatrix {
 	
 	// Based on Step 2 of PlayFair in spec
@@ -23,6 +26,26 @@ public class PlayfairMatrix {
 	 	Decrypt by replacing cipher text letters the with letters immediately above. 
 	*/
 	
-	
+	public static char[][] generateMatrix(String keystr) {
+		char[][] matrix = new char[5][5];
+		char[] key = keystr.toCharArray();
+		int k = 0; // index in key
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				matrix[i][j] = key[k];
+				k++;
+			}
+		}
+		
+		// TESTING ---------- loops through matrix array to output contents
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println();
+		}
+		
+		return matrix;
+    }
 
 }

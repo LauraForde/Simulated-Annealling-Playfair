@@ -29,5 +29,9 @@ public class CipherBreaker {
 		String[] digraphs = pf.makeDigraphs(primedText);
 		System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
 		
+		
+		PlayfairMatrix pm = new PlayfairMatrix();
+		String key = "THEQUICKBROWNFXMPDVLAZYGS";
+		System.out.println(pm.generateMatrix(key));
 	}
 }
