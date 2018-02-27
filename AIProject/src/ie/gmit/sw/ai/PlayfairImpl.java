@@ -1,5 +1,9 @@
 package ie.gmit.sw.ai;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 public class PlayfairImpl {
 	
 	// Step 1 - Prime the plain text 
@@ -91,18 +95,30 @@ public class PlayfairImpl {
 		for (String digraph : digraphs) { // For each digraph in the digraph array
             char[] pair = digraph.toCharArray();
             
+            // using hashmap to store key value pair - https://beginnersbook.com/2013/12/hashmap-in-java-with-example/
+            HashMap<Character, Integer[]> map = new HashMap<Character, Integer[]>();
+            
             for (char p : pair) {
             	// i j starting at 1, matrix normally read as 1, 5 etc not 0, 4?
-            	for (int i = 1; i < 5; i++) {
-	                for (int j = 1; j < 5; j++) {
-	                    if (matrix[i][j] == p)
-	                    	System.out.println("Found at " + i + ", " + j);
+            	for (int i = 0; i < 5; i++) {
+	                for (int j = 0; j < 5; j++) {
+	                    if (matrix[i][j] == p) {
+	                    	Integer[] location = {i + 1, j + 1};
+	                    	//System.out.print(p + ": " +  Arrays.toString(location) + "\t ");
+	                    	map.put(p, location); // Add the char and its location in the matrix to the map
+	                    }
+	                    	
 	                }
 	            }
 			}
-	            
-
-            // if in the same row {
+            
+            // Adapted from https://stackoverflow.com/a/3605320, just to make sure map is right
+            for (Entry<Character, Integer[]> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + ": " + Arrays.toString(entry.getValue()));
+            }
+            
+            
+            //if(pair[0]) {
 
             // } else if in the same column {
 
