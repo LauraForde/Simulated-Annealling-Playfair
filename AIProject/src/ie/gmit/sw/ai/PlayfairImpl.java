@@ -105,17 +105,18 @@ public class PlayfairImpl {
 
             if (row0 == row1) { // Letters in same row
             	// Replace letter with the letter to immediate left (index - 1?)
-            	new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0) - 1));
-            	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1) - 1));
+            	new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
+            	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
             	System.out.println(new0 + "  " + new1);
 
             	
             } else if (col0 == col1) { // Letters in the same column 
             	// Replace letter with the letter immediately above?
+            	System.out.println("not yet implemented");
             	
             } else { // Letters in different rows/columns
             	// Box/alternate corners
-            	
+            	System.out.println("not yet implemented");
             }
 
 
