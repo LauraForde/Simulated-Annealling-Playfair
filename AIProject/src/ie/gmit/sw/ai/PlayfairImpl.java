@@ -72,12 +72,12 @@ public class PlayfairImpl {
 		}
 		
 		// TESTING ---------- loops through matrix array to output contents
-		/*for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				System.out.print(matrix[i][j] + " ");
 			}
 			System.out.println();
-		}*/
+		}
 		
 		return matrix;
     }
@@ -87,6 +87,30 @@ public class PlayfairImpl {
 		
 		// Decrypt using rules above with given matrix
 		// Matrix will differ each time when Simulated Annealling implemented, working with basic quick brown fox matrix for now
+		
+		for (String digraph : digraphs) { // For each digraph in the digraph array
+            char[] pair = digraph.toCharArray();
+            
+            for (char p : pair) {
+            	// i j starting at 1, matrix normally read as 1, 5 etc not 0, 4?
+            	for (int i = 1; i < 5; i++) {
+	                for (int j = 1; j < 5; j++) {
+	                    if (matrix[i][j] == p)
+	                    	System.out.println("Found at " + i + ", " + j);
+	                }
+	            }
+			}
+	            
+
+            // if in the same row {
+
+            // } else if in the same column {
+
+            // } else different rows {
+
+            //}
+            // plainText.append(new pair);
+        }
 		
 		return plainText; 
 		
