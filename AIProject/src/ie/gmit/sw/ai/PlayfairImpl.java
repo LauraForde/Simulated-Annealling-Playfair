@@ -108,19 +108,24 @@ public class PlayfairImpl {
             	//new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
             	//new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
             	
-            	System.out.print((matrix.indexOf(digraph.charAt(0)) - 1) + "  " + (matrix.indexOf(digraph.charAt(1)) - 1));
-            	System.out.println();
+            	//System.out.print((matrix.indexOf(digraph.charAt(0)) - 1) + "  " + (matrix.indexOf(digraph.charAt(1)) - 1));
+            	//System.out.println();
             	
             	int ind0 = matrix.indexOf(digraph.charAt(0)) - 1;
             	int ind1 = matrix.indexOf(digraph.charAt(1)) - 1;
- 	
-            	if (ind0 < 0) {
-            		new0 = '-';
+            	
+            	if (ind0 < 0) { // If the new index (moved left) of the char is less than 0 (i.e. out of bounds)
+            		// Get the char at the index equal to the matrix size minus the index of the given digraph
+            		// So T (index 0) => (24 - (0)) = char at 24, which is S, which is right
+            		new0 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(0))));
+            		// Other char works fine, can't have two of the same and first char in the matrix is the only problem
                 	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
             	} else if (ind1 < 0){
+            		// Same as above except for the second char of the digraph
             		new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
-            		new1 = '-';
+            		new1 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(0))));
             	} else if (ind0 >= 0 && ind1 >= 0 ){
+            		// Both fine
             		new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
                 	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
             	}
