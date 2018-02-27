@@ -65,35 +65,48 @@ public class PlayfairImpl {
 	 	Decrypt by replacing cipher text letters the with letters immediately above. 
 	*/
 	
-	public static char[][] generateMatrix(String keystr) {
-		/*char[][] matrix = new char[5][5];
-		char[] key = keystr.toCharArray();
-		int k = 0; // index in key
+	public static void printMatrix(String keystr) {
+		int k = 0; // index of string
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				matrix[i][j] = key[k];
+				System.out.print(keystr.substring(k, k + 1) + "  ");
 				k++;
 			}
-		}*/
-		
-		/* TESTING ---------- loops through matrix array to output contents
-		System.out.println();
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				System.out.print(matrix[i][j] + " ");
-			}
 			System.out.println();
-		}*/
-		
-		return null; //matrix;
+		}
+		System.out.println();
     }
 	
-	public static StringBuilder decrypt(char[][] matrix, String[] digraphs) {
+	public static StringBuilder decrypt(String matrix, String[] digraphs) {
 		// Running into trouble... better to just work with string matrix???? Array too complex..?
 		// Can surely do calculations on "THEQUICKBROWNFXMPDVLAZYGS" to get "location"... maybe. Will try that out
-		
-		return null;
 
+		StringBuilder plainText = new StringBuilder(); // Using Stringbuilder again to build the decrypted text
+
+        for (String digraph : digraphs) {
+        	 // indexOf returns the index of a given character, if null returns null
+        	// Pass the first char to indexOf to find where it is within the matrix
+        	// e.g. matrix.indexOf('f') will return 13
+        	// Divide to get row, modulo to get column. Dividing gives how many times it goes in evenly (row), modulo gives the remainder (col)
+        	// Take into account rows and column start from 0, not 1
+        	// F is at index 13, which is row 2, col 3 (or row 3 col 4)
+        	
+        	// First char in digraph
+            int row0 = matrix.indexOf(digraph.charAt(0)) / 5;
+            int col0 = matrix.indexOf(digraph.charAt(0)) % 5;
+            
+            // Second char in digraph
+            int row1 = matrix.indexOf(digraph.charAt(1)) / 5;
+            int col1 = matrix.indexOf(digraph.charAt(1)) % 5;
+            
+            System.out.println(digraph.charAt(0) + ": " + row0 + "  " + col0);
+            System.out.println(digraph.charAt(1) + ": " + row1 + "  " + col1);
+
+
+            // plainText.append(new stuff);
+        } // End for each digraph in array
+
+        return plainText;
 	}
 	
 }

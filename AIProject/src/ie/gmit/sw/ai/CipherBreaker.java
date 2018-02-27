@@ -27,14 +27,15 @@ public class CipherBreaker {
 		String primedText = pf.primePlainTxt(fp.readFile(path));
 		//System.out.println("\n1. Primed Text: " + primedText);
 		String[] digraphs = pf.makeDigraphs(primedText);
-		System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
+		//System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
 		
 		
 		String key = "THEQUICKBROWNFXMPDVLAZYGS";
-		char[][] matrix = pf.generateMatrix(key);
+		pf.printMatrix(key);
 		String[] diTest = {"AR", "TI", "FI"};
+		System.out.println(Arrays.toString(diTest));
 		//System.out.println(Arrays.deepToString(matrix)); // deepToString for outputting nested arrays adapted from https://stackoverflow.com/a/409795
-		pf.decrypt(matrix, diTest);
+		pf.decrypt(key, diTest);
 	
 	}
 }
