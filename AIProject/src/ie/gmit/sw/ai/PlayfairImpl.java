@@ -30,17 +30,66 @@ public class PlayfairImpl {
         String digraphs[] = new String[string.length() / 2];
         int index = 0;
 
-        for (int i = 0; i < string.length(); i = i + 2) {
-        // Using digraph length doesn't seem to work, will try string / 2
-        //for (int i = 0; i < digraphs.length; i++) { 
-        	//digraphs[index] = string.substring(i, i + 2); // Assign substring (current char -> +2) to digraph[] element at current index  
-           // index = index + 2;
-        	
+        for (int i = 0; i < string.length(); i = i + 2) { // Using String length and increments of 2 (Instead of digraphs[] length and increments of 1)
         	digraphs[index] = string.substring(i, i + 2); // Assign substring (current char -> +2) to digraph[] element at current index  
-        	index++;
+        	index++; // Move to next index
         }
         
         return digraphs;
 	}
 
+
+	// Based on Step 2 of PlayFair in spec
+	
+	/* Rule 1	Digraph Letters in different rows and columns
+		Create a “box” inside the matrix with each diagraph letter as a corner
+		read off the letter at the opposite corner of the same row 
+		-> cipher(B, P)={matrix[row(B)][col(P)], matrix[row(P)][col(B)]}.
+		Reverse to decrypt.
+	*/
+	
+	/* Rule 2	Digraph Letters in Same Row 
+	 	Replace any letters that appear on the same row with the letters to their immediate right
+	 	Wrap around the matrix if necessary. 
+	 	Decrypt by replacing cipher-text letters the with letters on their immediate left.
+	*/
+	
+	/* Rule 3	Digraph Letters in Same Column
+	 	Replace any letters that appear on the same column with the letters immediately below
+		Wrap back around the top of the column if necessary
+	 	Decrypt by replacing cipher text letters the with letters immediately above. 
+	*/
+	
+	public static char[][] generateMatrix(String keystr) {
+		char[][] matrix = new char[5][5];
+		char[] key = keystr.toCharArray();
+		int k = 0; // index in key
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				matrix[i][j] = key[k];
+				k++;
+			}
+		}
+		
+		// TESTING ---------- loops through matrix array to output contents
+		/*for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println();
+		}*/
+		
+		return matrix;
+    }
+	
+	public static StringBuilder decrypt(char[][] matrix, String[] digraphs) {
+		StringBuilder plainText = new StringBuilder(); // Decrypted text
+		
+		// Decrypt using rules above with given matrix
+		// Matrix will differ each time when Simulated Annealling implemented, working with basic quick brown fox matrix for now
+		
+		return plainText; 
+		
+	}
+	
 }

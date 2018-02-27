@@ -20,18 +20,18 @@ public class CipherBreaker {
 		Path path = FileSystems.getDefault().getPath(filename);
 		//System.out.println("Path: " + path);
 		//char file[] = fp.readFile(path).toCharArray();
-		System.out.println("File: " + fp.readFile(path));
+		//System.out.println("File: " + fp.readFile(path));
 		//System.out.print(sa.shuffle(file));
 		
 		PlayfairImpl pf = new PlayfairImpl();
 		String primedText = pf.primePlainTxt(fp.readFile(path));
-		System.out.println("\n1. Primed Text: " + primedText);
+		//System.out.println("\n1. Primed Text: " + primedText);
 		String[] digraphs = pf.makeDigraphs(primedText);
 		System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
 		
 		
-		PlayfairMatrix pm = new PlayfairMatrix();
 		String key = "THEQUICKBROWNFXMPDVLAZYGS";
-		System.out.println(pm.generateMatrix(key));
+		char[][] matrix = pf.generateMatrix(key);
+		//System.out.println(Arrays.deepToString(matrix)); // deepToString for outputting nested arrays adapted from https://stackoverflow.com/a/409795
 	}
 }
