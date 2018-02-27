@@ -100,13 +100,31 @@ public class PlayfairImpl {
             int col1 = matrix.indexOf(digraph.charAt(1)) % 5;
             
             // New chars
-            char new0;
-            char new1;
+            char new0 = '-';
+            char new1 = '-';
 
             if (row0 == row1) { // Letters in same row
             	// Replace letter with the letter to immediate left (index - 1?)
-            	new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
-            	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
+            	//new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
+            	//new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
+            	
+            	System.out.print((matrix.indexOf(digraph.charAt(0)) - 1) + "  " + (matrix.indexOf(digraph.charAt(1)) - 1));
+            	System.out.println();
+            	
+            	int ind0 = matrix.indexOf(digraph.charAt(0)) - 1;
+            	int ind1 = matrix.indexOf(digraph.charAt(1)) - 1;
+ 	
+            	if (ind0 < 0) {
+            		new0 = '-';
+                	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
+            	} else if (ind1 < 0){
+            		new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
+            		new1 = '-';
+            	} else if (ind0 >= 0 && ind1 >= 0 ){
+            		new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0)) - 1);
+                	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)) - 1);
+            	}
+            	
             	System.out.println(new0 + "  " + new1);
 
             	
