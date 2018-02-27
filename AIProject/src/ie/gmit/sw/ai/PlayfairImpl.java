@@ -88,9 +88,9 @@ public class PlayfairImpl {
         	// Pass the first char to indexOf to find where it is within the matrix
         	// e.g. matrix.indexOf('f') will return 13
         	// Divide to get row, modulo to get column. Dividing gives how many times it goes in evenly (row), modulo gives the remainder (col)
-        	// Take into account rows and column start from 0, not 1
-        	// F is at index 13, which is row 2, col 3 (or row 3 col 4)
-        	
+        	// Take into account rows and columns start from 0, not 1
+        	// F is at index 13, which is row 2, col 3 (or row 3 col 4) - 13 / 5 = 2 remainder 3
+        
         	// First char in digraph
             int row0 = matrix.indexOf(digraph.charAt(0)) / 5;
             int col0 = matrix.indexOf(digraph.charAt(0)) % 5;
@@ -99,8 +99,24 @@ public class PlayfairImpl {
             int row1 = matrix.indexOf(digraph.charAt(1)) / 5;
             int col1 = matrix.indexOf(digraph.charAt(1)) % 5;
             
-            System.out.println(digraph.charAt(0) + ": " + row0 + "  " + col0);
-            System.out.println(digraph.charAt(1) + ": " + row1 + "  " + col1);
+            // New chars
+            char new0;
+            char new1;
+
+            if (row0 == row1) { // Letters in same row
+            	// Replace letter with the letter to immediate left (index - 1?)
+            	new0 = matrix.charAt(matrix.indexOf(digraph.charAt(0) - 1));
+            	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1) - 1));
+            	System.out.println(new0 + "  " + new1);
+
+            	
+            } else if (col0 == col1) { // Letters in the same column 
+            	// Replace letter with the letter immediately above?
+            	
+            } else { // Letters in different rows/columns
+            	// Box/alternate corners
+            	
+            }
 
 
             // plainText.append(new stuff);
