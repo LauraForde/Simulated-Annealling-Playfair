@@ -66,14 +66,23 @@ public class PlayfairImpl {
 	*/
 	
 	public static void printMatrix(String keystr) {
-		int k = 0; // index of string
+		int k = 0, k2 = 0; // index of string
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				System.out.print(keystr.substring(k, k + 1) + "  ");
 				k++;
 			}
+			System.out.print("\t\t");
+			for(int l = 0; l < 5; l++) { // Printing out indexes
+				if(k2 < 10)
+					System.out.print(" " + k2 + "  ");
+				else
+					System.out.print(k2 + "  ");
+				k2++;
+			}
 			System.out.println();
 		}
+		
 		System.out.println();
     }
 	
@@ -142,17 +151,17 @@ public class PlayfairImpl {
             	ind0 = matrix.indexOf(digraph.charAt(0)) - 5;
             	ind1 = matrix.indexOf(digraph.charAt(1)) - 5;
             	
-            	//System.out.println("inds:  " + ind0 + "  " + ind1);
+            	System.out.println("\ninds:  " + ind0 + "  " + ind1);
             	
-            	if (ind0 < 4) {
-            		//System.out.println("newind:  " + (24 + (matrix.indexOf(digraph.charAt(0)))) + "  " + ind1);
-            		new0 = matrix.charAt(24 + (ind0));
-            		System.out.println(matrix.indexOf(digraph.charAt(1)));
-                	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)));
-            	} else if (ind1 < 4){
-            		//System.out.println("newind:  " + ind0 + "  " + (24 + (matrix.indexOf(digraph.charAt(1)))));
-            		new0 = matrix.charAt(matrix.indexOf(ind0 - 5));
-            		new1 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(1))));
+            	if (ind0 < 0) {
+            		// Cannot figure out why calculations aren't working like they should?? Have tried -4 up above and just using ind0/1 below but still gives errors...
+            		// This works but not sure why?
+            		new0 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(0)) - 4));
+            		new1 = matrix.charAt(matrix.indexOf(ind1) + 1);
+            		
+            	} else if (ind1 < 0){
+            		new0 = matrix.charAt(matrix.indexOf(ind0) + 1);
+            		new1 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(1)) - 4));
             	} else if (ind0 < 0 && ind1 < 0) {
             		// Both not fine
             		new0 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(0))));
@@ -169,7 +178,7 @@ public class PlayfairImpl {
             
             else { // Letters in different rows/columns
             	// Box/alternate corners
-            	System.out.println(" - ");
+            	System.out.print("n/a \n");
             }
 
 
