@@ -35,9 +35,9 @@ public class CipherBreaker {
 		String[] diTest = {"AR", "DN", "TI", "IT", "FI", "HE", "TH"};
 		System.out.println(Arrays.toString(digraphs));
 		//System.out.println(Arrays.deepToString(matrix)); // deepToString for outputting nested arrays adapted from https://stackoverflow.com/a/409795
-		//String decrypted = pf.decrypt(key, digraphs);
-		//System.out.println("Decrypted: \n" + decrypted);
-		System.out.println(pf.decrypt(key, digraphs));
+		String decrypted = pf.decrypt(key, digraphs);
+		System.out.println("Decrypted: \n" + decrypted);
+		//System.out.println(pf.decrypt(key, digraphs));
 	
 	}
 }

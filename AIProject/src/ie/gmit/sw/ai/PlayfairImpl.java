@@ -86,7 +86,7 @@ public class PlayfairImpl {
 		System.out.println();
     }
 	
-	public static StringBuilder decrypt(String matrix, String[] digraphs) {
+	public static String decrypt(String matrix, String[] digraphs) {
 		// Running into trouble... better to just work with string matrix???? Array too complex..?
 		// Can surely do calculations on "THEQUICKBROWNFXMPDVLAZYGS" to get "location"... maybe. Will try that out
 
@@ -184,9 +184,9 @@ public class PlayfairImpl {
             plainText.append(new0);
             plainText.append(new1);
         } // End for each digraph in array
-        System.out.println("PlainText: " + plainText);
+        //System.out.println("PlainText: " + plainText);
 
-        return plainText;
+        return plainText.toString();
 	}
 	
 }
