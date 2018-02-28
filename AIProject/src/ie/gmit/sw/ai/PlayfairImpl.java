@@ -142,20 +142,21 @@ public class PlayfairImpl {
             	ind0 = matrix.indexOf(digraph.charAt(0)) - 5;
             	ind1 = matrix.indexOf(digraph.charAt(1)) - 5;
             	
-            	System.out.println("inds:  " + ind0 + "  " + ind1);
+            	//System.out.println("inds:  " + ind0 + "  " + ind1);
             	
-            	if (ind0 < 0) {
-            		//System.out.println("newind:  " + (24 - (matrix.indexOf(digraph.charAt(0)))) + "  " + ind1);
-            		new0 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(0))));
-                	new1 = matrix.charAt(matrix.indexOf(ind1));
-            	} else if (ind1 < 0){
-            		//System.out.println("newind:  " + (24 - (matrix.indexOf(digraph.charAt(1)))));
-            		new0 = matrix.charAt(matrix.indexOf(ind0));
-            		new1 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(1))));
+            	if (ind0 < 4) {
+            		//System.out.println("newind:  " + (24 + (matrix.indexOf(digraph.charAt(0)))) + "  " + ind1);
+            		new0 = matrix.charAt(24 + (ind0));
+            		System.out.println(matrix.indexOf(digraph.charAt(1)));
+                	new1 = matrix.charAt(matrix.indexOf(digraph.charAt(1)));
+            	} else if (ind1 < 4){
+            		//System.out.println("newind:  " + ind0 + "  " + (24 + (matrix.indexOf(digraph.charAt(1)))));
+            		new0 = matrix.charAt(matrix.indexOf(ind0 - 5));
+            		new1 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(1))));
             	} else if (ind0 < 0 && ind1 < 0) {
             		// Both not fine
-            		new0 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(0))));
-            		new1 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(1))));
+            		new0 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(0))));
+            		new1 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(1))));
             		
             	} else if (ind0 >= 0 && ind1 >= 0){
             		// Both fine
@@ -163,12 +164,12 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
           	
-            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
+            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
             } // End same column rule
             
             else { // Letters in different rows/columns
             	// Box/alternate corners
-            	System.out.println("not yet implemented");
+            	System.out.println(" - ");
             }
 
 
