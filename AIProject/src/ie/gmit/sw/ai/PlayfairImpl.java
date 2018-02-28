@@ -188,7 +188,14 @@ public class PlayfairImpl {
             	// cipher(B, P) = { matrix[row(B)][col(P)] , matrix[row(P)][col(B)] }
             	// Reversed =>		cipher 0,1	=> row1 col0, row0 col1 ? yes? 
                 // Rows got by dividing, columns by moduloing, need to reverse that..?
-             	System.out.println(row0 * 5 + "  " + row1 * 5);
+                // A -> S (index 24), A is 20 (row * 5) r's column is 4, add that..?
+                // R -> I (5), R -> 1 * 5 = 5 + 0 = 5 (which is I)
+                // F -> O (10) -> row * 5 = 10 + I's column (0) = 10
+                // I -> B (8), I-> 1 * 5 = 5 + f's column (8) = 8
+                // That seems to work
+                // Algorithm = multiply char's row by 5 and add the other char's column
+             	System.out.println(row0 * 5 + col1);
+             	System.out.println(row1 * 5 + col0);
                 
                 //System.out.println(matrix.indexOf(digraph.charAt(0)) + " " + matrix.indexOf(digraph.charAt(1)) + "  =>  ");
             	System.out.println("Row Col:\n" + row0 + ", " + col0 + "  and  " + row1 +  ", "  + col1 + "\n");
