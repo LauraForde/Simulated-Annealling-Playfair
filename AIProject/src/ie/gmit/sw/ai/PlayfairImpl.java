@@ -178,10 +178,19 @@ public class PlayfairImpl {
             else { // Letters in different rows/columns
             	// Box/alternate corners...
             	// AR, FI, RD should return SI,OB,KL
+              	// Will have to use calculations here to get "corners"
+            	// AR - 20 (A) 9 (R) should become 	24 (S) 5 (I)
+            	// FI - 13 (F) 5 (I) 	  =>		10 (O) 8 (B)
+            	// RD - 9 (R) 17 (D)	  =>		19 (L) 7 (K)
             	
-            	// 
                 System.out.println(digraph + "  =>\t" + new0 + "  " + new1);
-                System.out.println(matrix.indexOf(digraph.charAt(0)) + " " + matrix.indexOf(digraph.charAt(1)) + "  =>  ");
+            	
+            	// cipher(B, P) = { matrix[row(B)][col(P)] , matrix[row(P)][col(B)] }
+            	// Reversed =>		cipher 0,1	=> row1 col0, row0 col1 ? yes? 
+                // Rows got by dividing, columns by moduloing, need to reverse that..?
+             	System.out.println(row0 * 5 + "  " + row1 * 5);
+                
+                //System.out.println(matrix.indexOf(digraph.charAt(0)) + " " + matrix.indexOf(digraph.charAt(1)) + "  =>  ");
             	System.out.println("Row Col:\n" + row0 + ", " + col0 + "  and  " + row1 +  ", "  + col1 + "\n");
 
             }
