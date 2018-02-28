@@ -143,7 +143,7 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
             	
-            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);
+            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);
             } // End same row rule
             
             else if (col0 == col1) { // Letters in the same column 
@@ -172,34 +172,33 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
           	
-            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
+            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
             } // End same column rule
             
             else { // Letters in different rows/columns
             	// Box/alternate corners...
-            	// AR, FI, RD should return SI,OB,KL
-              	// Will have to use calculations here to get "corners"
-            	// AR - 20 (A) 9 (R) should become 	24 (S) 5 (I)
-            	// FI - 13 (F) 5 (I) 	  =>		10 (O) 8 (B)
-            	// RD - 9 (R) 17 (D)	  =>		19 (L) 7 (K)
             	
-                System.out.println(digraph + "  =>\t" + new0 + "  " + new1);
-            	
-            	// cipher(B, P) = { matrix[row(B)][col(P)] , matrix[row(P)][col(B)] }
-            	// Reversed =>		cipher 0,1	=> row1 col0, row0 col1 ? yes? 
-                // Rows got by dividing, columns by moduloing, need to reverse that..?
-                // A -> S (index 24), A is 20 (row * 5) r's column is 4, add that..?
-                // R -> I (5), R -> 1 * 5 = 5 + 0 = 5 (which is I)
-                // F -> O (10) -> row * 5 = 10 + I's column (0) = 10
-                // I -> B (8), I-> 1 * 5 = 5 + f's column (8) = 8
-                // That seems to work
-                // Algorithm = multiply char's row by 5 and add the other char's column
-             	System.out.println(row0 * 5 + col1);
-             	System.out.println(row1 * 5 + col0);
+            	/*LOGIC
+            	AR, FI, RD should return SI,OB,KL
+            	Will have to use calculations here to get "corners"
+            	AR - 20 (A) 9 (R) should become 	24 (S) 5 (I)
+            	FI - 13 (F) 5 (I) 	  =>		10 (O) 8 (B)
+            	RD - 9 (R) 17 (D)	  =>		19 (L) 7 (K)
+            	            	
+            	cipher(B, P) = { matrix[row(B)][col(P)] , matrix[row(P)][col(B)] }
+            	Reversed =>		cipher 0,1	=> row1 col0, row0 col1 ? yes? 
+                Rows got by dividing, columns by moduloing, need to reverse that..?
+                A -> S (index 24), A is 20 (row * 5) r's column is 4, add that..?
+                R -> I (5), R -> 1 * 5 = 5 + 0 = 5 (which is I)
+                F -> O (10) -> row * 5 = 10 + I's column (0) = 10
+                I -> B (8), I-> 1 * 5 = 5 + f's column (8) = 8
+                That seems to work
+                Algorithm = multiply char's row by 5 and add the other char's column*/
                 
-                //System.out.println(matrix.indexOf(digraph.charAt(0)) + " " + matrix.indexOf(digraph.charAt(1)) + "  =>  ");
-            	System.out.println("Row Col:\n" + row0 + ", " + col0 + "  and  " + row1 +  ", "  + col1 + "\n");
-
+                new0 = matrix.charAt(row0 * 5 + col1);
+                new1 = matrix.charAt(row1 * 5 + col0);
+            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
+                
             }
 
 
