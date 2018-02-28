@@ -91,7 +91,9 @@ public class PlayfairImpl {
 		// Can surely do calculations on "THEQUICKBROWNFXMPDVLAZYGS" to get "location"... maybe. Will try that out
 
 		StringBuilder plainText = new StringBuilder(); // Using Stringbuilder again to build the decrypted text
-
+		System.out.println("Matrix: " + matrix);
+		System.out.println("Digraphs passed in: " + Arrays.toString(digraphs));
+		
         for (String digraph : digraphs) {
         	 // indexOf returns the index of a given character, if null returns null
         	// Pass the first char to indexOf to find where it is within the matrix
@@ -141,7 +143,7 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
             	
-            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);
+            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);
             } // End same row rule
             
             else if (col0 == col1) { // Letters in the same column 
@@ -170,17 +172,19 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
           	
-            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
+            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
             } // End same column rule
             
             else { // Letters in different rows/columns
             	// Box/alternate corners
-            	System.out.print("n/a \n");
+            	//System.out.print("--");
             }
 
 
-            // plainText.append(new stuff);
+            plainText.append(new0);
+            plainText.append(new1);
         } // End for each digraph in array
+        System.out.println("PlainText: " + plainText);
 
         return plainText;
 	}
