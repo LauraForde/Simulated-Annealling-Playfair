@@ -151,21 +151,18 @@ public class PlayfairImpl {
             	ind0 = matrix.indexOf(digraph.charAt(0)) - 5;
             	ind1 = matrix.indexOf(digraph.charAt(1)) - 5;
             	
-            	System.out.println("\ninds:  " + ind0 + "  " + ind1);
+            	//System.out.println("\ninds:  " + ind0 + "  " + ind1);
             	
             	if (ind0 < 0) {
-            		// Cannot figure out why calculations aren't working like they should?? Have tried -4 up above and just using ind0/1 below but still gives errors...
-            		// This works but not sure why?
-            		new0 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(0)) - 4));
-            		new1 = matrix.charAt(matrix.indexOf(ind1) + 1);
+            		//System.out.println(matrix.indexOf(digraph.charAt(1)) + "  -> " + (matrix.indexOf(ind1)));
+            		// For some reason 5 minus 5 is coming out as -1... just gonna keep +1 there until it causes a problem
+            		new0 = matrix.charAt(25 + (ind0)); // E.g T => 25 + (- 5) = 20, which is right index
+            		new1 = matrix.charAt(matrix.indexOf(ind1) + 1); // Why +1 needed????? ind1 shouldn't be -1??? 
             		
             	} else if (ind1 < 0){
+            		// Same as above except other way around
             		new0 = matrix.charAt(matrix.indexOf(ind0) + 1);
-            		new1 = matrix.charAt(24 + (matrix.indexOf(digraph.charAt(1)) - 4));
-            	} else if (ind0 < 0 && ind1 < 0) {
-            		// Both not fine
-            		new0 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(0))));
-            		new1 = matrix.charAt(24 - (matrix.indexOf(digraph.charAt(1))));
+            		new1 = matrix.charAt(25 + (ind1));
             		
             	} else if (ind0 >= 0 && ind1 >= 0){
             		// Both fine
