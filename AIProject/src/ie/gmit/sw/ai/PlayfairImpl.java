@@ -92,7 +92,7 @@ public class PlayfairImpl {
 
 		StringBuilder plainText = new StringBuilder(); // Using Stringbuilder again to build the decrypted text
 		System.out.println("Matrix: " + matrix);
-		System.out.println("Digraphs passed in: " + Arrays.toString(digraphs));
+		System.out.println("Digraphs passed in: " + Arrays.toString(digraphs) + "\n");
 		
         for (String digraph : digraphs) {
         	 // indexOf returns the index of a given character, if null returns null
@@ -143,7 +143,7 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
             	
-            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);
+            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);
             } // End same row rule
             
             else if (col0 == col1) { // Letters in the same column 
@@ -172,12 +172,18 @@ public class PlayfairImpl {
                 	new1 = matrix.charAt(ind1);
             	}
           	
-            	//System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
+            	System.out.println(digraph + "  =>  " + new0 + "  " + new1);           	
             } // End same column rule
             
             else { // Letters in different rows/columns
-            	// Box/alternate corners
-            	//System.out.print("--");
+            	// Box/alternate corners...
+            	// AR, FI, RD should return SI,OB,KL
+            	
+            	// 
+                System.out.println(digraph + "  =>\t" + new0 + "  " + new1);
+                System.out.println(matrix.indexOf(digraph.charAt(0)) + " " + matrix.indexOf(digraph.charAt(1)) + "  =>  ");
+            	System.out.println("Row Col:\n" + row0 + ", " + col0 + "  and  " + row1 +  ", "  + col1 + "\n");
+
             }
 
 

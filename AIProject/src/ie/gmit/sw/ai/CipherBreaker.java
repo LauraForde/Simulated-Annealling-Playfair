@@ -32,11 +32,13 @@ public class CipherBreaker {
 		
 		String key = "THEQUICKBROWNFXMPDVLAZYGS";
 		pf.printMatrix(key);
-		String[] diTest = {"AR", "DN", "TI", "IT", "FI", "HE", "TH"};
+		//String[] diTest = {"AR", "DN", "TI", "IT", "FI", "HE", "TH"};
+		String[] diTest = {"AR", "FI", "RD"};
 		System.out.println(Arrays.toString(digraphs));
 		//System.out.println(Arrays.deepToString(matrix)); // deepToString for outputting nested arrays adapted from https://stackoverflow.com/a/409795
-		String decrypted = pf.decrypt(key, digraphs);
-		System.out.println("Decrypted: \n" + decrypted);
+		//String decrypted = pf.decrypt(key, digraphs);
+		String decrypted = pf.decrypt(key, diTest);
+		System.out.println("\nDecrypted: \n" + decrypted);
 		//System.out.println(pf.decrypt(key, digraphs));
 	
 	}
