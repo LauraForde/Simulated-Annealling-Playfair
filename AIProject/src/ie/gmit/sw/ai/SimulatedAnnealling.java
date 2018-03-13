@@ -1,7 +1,11 @@
 package ie.gmit.sw.ai;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SimulatedAnnealling {
 	
@@ -22,33 +26,37 @@ public class SimulatedAnnealling {
 	 * 	   // end for temp 
 	 */
 	
-	// SimulatedAnnealling
-	public void simulatedAnnealingBreak() {
-		// Generate a random 25 letter key called parent
-		char key[] = "THEQUICKBROWNFXMPDVLAZYGS".toCharArray(); // to char array - https://stackoverflow.com/a/11711248
-		char parent[] = shuffle(key);
-		
+	// Decrypt using a given key
+	public String decrypt(String[] digraphs) {
+		String key = shuffle("ABCDEFGHIKLMNOPQRSTUVWXYZ");
+		PlayfairImpl pf = new PlayfairImpl();
+		String decrypted = pf.decrypt(key, digraphs);
+
 		// Decrypt using key
+		return decrypted;
 	}
 	
-	// Fisher-Yates Shuffle, O(n) time complexity
-	public char[] shuffle(char[] key) {
-		int index;
-		Random random = ThreadLocalRandom.current();
-		
-		for (int i = key.length - 1; i > 0; i--) {
-			// Get a random index of the array
-			index = random.nextInt(i + 1);
-			
-			if(index != i) {
-				// ^ is a bitwise operator, related to binary
-				// good explanation - https://www.programiz.com/java-programming/bitwise-operators#xor
-				key[index] ^= key[i];
-				key[i] ^= key[index];
-				key[index] ^= key[i];
-			}
-		}
-		return key;
+	// Score fitness
+	public double scoreFitness() throws IOException {
+		//System.out.print("4grams sample: ");
+		Map quadgrams = FilePreparer.getQuad();
+		double score = 0;
+		return score;
 	}
+	
+	// Shuffle function adapted from https://stackoverflow.com/a/3316696
+	public String shuffle(String input){
+        List<Character> characters = new ArrayList<Character>();
+        for(char c:input.toCharArray()){
+            characters.add(c);
+        }
+        StringBuilder output = new StringBuilder(input.length());
+        while(characters.size()!=0){
+            int randPicker = (int)(Math.random()*characters.size());
+            output.append(characters.remove(randPicker));
+        }
+        
+        return output.toString();
+    }
 
 }

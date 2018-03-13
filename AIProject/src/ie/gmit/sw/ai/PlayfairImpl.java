@@ -91,7 +91,7 @@ public class PlayfairImpl {
 		// Can surely do calculations on "THEQUICKBROWNFXMPDVLAZYGS" to get "location"... maybe. Will try that out
 
 		StringBuilder plainText = new StringBuilder(); // Using Stringbuilder again to build the decrypted text
-		System.out.println("Matrix: " + matrix);
+		System.out.println("\nKey: " + matrix);
 		System.out.println("Digraphs passed in: " + Arrays.toString(digraphs) + "\n");
 		
         for (String digraph : digraphs) {
