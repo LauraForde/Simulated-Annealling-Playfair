@@ -48,16 +48,17 @@ public class SimulatedAnnealling {
 
 		for (int index = 0; index <= limit - 4; index++) {
 			//System.out.print((index + 1) + ". " + decrypted.substring(index, index + 4) + "[" + index + "-" + (index+4) + "]" + "\n");
-			Object occurences = quadgrams.get(decrypted.substring(index, index + 4));
+			Double occurences = (Double) quadgrams.get(decrypted.substring(index, index + 4));
 			if (occurences != null) {
-				System.out.println(occurences);
+				System.out.println(Math.log10(occurences));
+				score = score + Math.log10(occurences);
 			}
 			else
 				System.out.println("not found");
 			
 			//score = score + occurences.
 		}
-		
+		System.out.println("Score: " + score);
 		return score;
 	}
 	
