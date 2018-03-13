@@ -31,12 +31,15 @@ public class FilePreparer {
 	// Quadgram stuff
 	public static Map getQuad() throws IOException {
 		// https://stackoverflow.com/a/8886723
-		Map<String, String> map = new HashMap<String, String>(); // Should be <String, Integer> but will worry about that later
+		Map<String, Integer> map = new HashMap<String, Integer>();
         BufferedReader in = new BufferedReader(new FileReader("4grams.txt"));
         String line = "";
         while ((line = in.readLine()) != null) {
             String[] parts = line.split(" ");
-            map.put(parts[0], parts[1]);
+            if (parts[1] == " ")
+                map.put(parts[0], 0); // If the quad never appears pass in 0
+            else
+            	map.put(parts[0], Integer.parseInt(parts[1]));
         }
         in.close();
 

@@ -40,16 +40,24 @@ public class SimulatedAnnealling {
 	public double scoreFitness(String decrypted) throws IOException {
 		//System.out.print("4grams sample: ");
 		Map quadgrams = FilePreparer.getQuad();
+		double score = 0;
 		
 		int limit = decrypted.length();
-		if(limit > 403) // Not going to test entire text file, will work on 400 quadgrams
-			limit = 403; // 403 = index of last letter in 400th quadgram (399-403)
+		if(limit > 23) // Not going to test entire text file, will work on 400 quadgrams
+			limit = 23; // 403 = index of last letter in 400th quadgram (399-403)
 
 		for (int index = 0; index <= limit - 4; index++) {
-			System.out.print((index + 1) + ". " + decrypted.substring(index, index + 4) + "[" + index + "-" + (index+4) + "]" + "\n");
+			//System.out.print((index + 1) + ". " + decrypted.substring(index, index + 4) + "[" + index + "-" + (index+4) + "]" + "\n");
+			Object occurences = quadgrams.get(decrypted.substring(index, index + 4));
+			if (occurences != null) {
+				System.out.println(occurences);
+			}
+			else
+				System.out.println("not found");
+			
+			//score = score + occurences.
 		}
 		
-		double score = 0;
 		return score;
 	}
 	
