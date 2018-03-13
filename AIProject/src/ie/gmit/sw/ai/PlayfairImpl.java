@@ -92,7 +92,7 @@ public class PlayfairImpl {
 
 		StringBuilder plainText = new StringBuilder(); // Using Stringbuilder again to build the decrypted text
 		System.out.println("\nKey: " + matrix);
-		System.out.println("Digraphs passed in: " + Arrays.toString(digraphs) + "\n");
+		//System.out.println("Digraphs passed in: " + Arrays.toString(digraphs) + "\n");
 		
         for (String digraph : digraphs) {
         	 // indexOf returns the index of a given character, if null returns null

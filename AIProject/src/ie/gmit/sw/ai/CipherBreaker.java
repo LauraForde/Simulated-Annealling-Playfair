@@ -29,7 +29,7 @@ public class CipherBreaker {
 		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
 
 		String decrypted = sa.decrypt(digraphs);
-		double fitness = sa.scoreFitness();
+		double fitness = sa.scoreFitness(decrypted);
 		//String decrypted = pf.decrypt(key, digraphs);
 		System.out.println("\nDecrypted: \n" + decrypted);
 	
