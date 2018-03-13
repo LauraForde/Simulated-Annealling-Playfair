@@ -50,13 +50,9 @@ public class SimulatedAnnealling {
 			//System.out.print((index + 1) + ". " + decrypted.substring(index, index + 4) + "[" + index + "-" + (index+4) + "]" + "\n");
 			Double occurences = (Double) quadgrams.get(decrypted.substring(index, index + 4));
 			if (occurences != null) {
-				System.out.println(Math.log10(occurences));
-				score = score + Math.log10(occurences);
+				//System.out.println("Oc: " + occurences + "  / L: " + Math.log10(occurences));
+				score = score + (Math.log10(occurences));
 			}
-			else
-				System.out.println("not found");
-			
-			//score = score + occurences.
 		}
 		System.out.println("Score: " + score);
 		return score;
