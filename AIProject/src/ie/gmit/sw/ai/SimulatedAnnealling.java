@@ -1,8 +1,6 @@
 package ie.gmit.sw.ai;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +25,32 @@ public class SimulatedAnnealling {
 	 */
 	
 	// Decrypt using a given key
-	public String decrypt(String[] digraphs) {
+	public String decrypt(String[] digraphs) throws IOException {
 		String key = shuffle("ABCDEFGHIKLMNOPQRSTUVWXYZ");
 		PlayfairImpl pf = new PlayfairImpl();
 		String decrypted = pf.decrypt(key, digraphs);
-
-		// Decrypt using key
+		
+		double parentFitness = scoreFitness(decrypted, key);
+		
+		for (int temp = 10; temp >= 0; temp--) {
+			for (int transitions = 50000; transitions >= 0; transitions--) {
+				String child = shuffle(key);
+				double childFitness = scoreFitness(digraphs.toString(), key);
+				double delta = childFitness - parentFitness;
+				if (delta > 0) {
+					key = child;
+					System.out.println("Child better, new key: " + key);
+				} else if (delta < 0){
+					System.out.println("Child not better");
+				}
+				
+			}
+		}
 		return decrypted;
 	}
 	
 	// Score fitness
-	public double scoreFitness(String decrypted) throws IOException {
+	public double scoreFitness(String decrypted, String key) throws IOException {
 		//System.out.print("4grams sample: ");
 		Map quadgrams = FilePreparer.getQuad();
 		double score = 0;
@@ -51,11 +64,33 @@ public class SimulatedAnnealling {
 			Double occurences = (Double) quadgrams.get(decrypted.substring(index, index + 4));
 			if (occurences != null) {
 				//System.out.println("Oc: " + occurences + "  / L: " + Math.log10(occurences));
-				score = score + (Math.log10(occurences));
+				score = score + Math.log10(occurences/389373);
 			}
 		}
-		System.out.println("Score: " + score);
+		System.out.println("Score: " + score);		
+		
 		return score;
+
+	}
+	
+	public String doLooping(double score, String parent) {
+		/* 	4. For temp = 10 to 0, step -1
+	 * 	5.   For transitions = 50,000 to 0, step -1
+	 * 	6.		Set child = shuffleKey(parent) // Make small change to the key
+	 * 	7.		Score the fitness of the key as logProbability(child)
+	 * 	8.		Set delta = logProbability(child) - logProbability(parent)
+	 * 	9.		If delta > 0 // i.e. new key better
+	 * 10.		  Set parent = child
+	 * 11.		Else if delta < 0
+	 * 12.		  Set parent = [ child with prob e^(-delta / temp) ]
+	 * 		 // end for transitions
+	 * 	   // end for temp */
+
+		
+		
+		return null;
+
+		
 	}
 	
 	// Shuffle function adapted from https://stackoverflow.com/a/3316696

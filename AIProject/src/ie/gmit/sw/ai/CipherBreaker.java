@@ -6,8 +6,6 @@ package ie.gmit.sw.ai;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
 
 // Runner class - doesn't actually do anything, just calls other classes/methods
 public class CipherBreaker {
@@ -29,7 +27,6 @@ public class CipherBreaker {
 		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
 
 		String decrypted = sa.decrypt(digraphs);
-		double fitness = sa.scoreFitness(decrypted);
 		//String decrypted = pf.decrypt(key, digraphs);
 		System.out.println("\nDecrypted: \n" + decrypted);
 	
