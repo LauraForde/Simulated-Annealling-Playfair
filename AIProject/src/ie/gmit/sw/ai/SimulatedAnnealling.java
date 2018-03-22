@@ -35,7 +35,10 @@ public class SimulatedAnnealling {
 		for (int temp = 10; temp >= 0; temp--) {
 			for (int transitions = 50000; transitions >= 0; transitions--) {
 				String child = shuffle(key);
-				double childFitness = scoreFitness(digraphs.toString(), key);
+				String[] childDigraphs = pf.makeDigraphs(decrypted);
+				String decryptChild = pf.decrypt(key, childDigraphs);
+				System.out.println(decryptChild);
+				double childFitness = scoreFitness(decryptChild, key);
 				double delta = childFitness - parentFitness;
 				if (delta > 0) {
 					key = child;
