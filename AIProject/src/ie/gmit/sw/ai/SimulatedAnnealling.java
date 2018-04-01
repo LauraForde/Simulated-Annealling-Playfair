@@ -108,7 +108,8 @@ public class SimulatedAnnealling {
 			return swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
 		} else if ( x >= 8 && x < 10) {
 			// 2%, swap random rows
-			
+			return swapRows(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
+
 		} else {
 			// 90%, swap single letters
 			
@@ -164,6 +165,7 @@ public class SimulatedAnnealling {
 		return newKey.toString(); // Return stringified new key
 	}
 
+	// Swap Columns
 	private String swapColumns(String key, int col1, int col2) {
 		if (col1 == col2) { // Making sure same column can't be passed in to be swapped
 			System.out.println("Same");
@@ -176,6 +178,27 @@ public class SimulatedAnnealling {
 				char temp =  newKey[(rowInd + col1)]; // Set temporary = newKey at row index + column number
 				newKey[(rowInd + col1)] = newKey[(rowInd + col2)]; // Set char at that index to be the char on the same row but in the second column
 				newKey[(rowInd + col2)] = temp; // Set that index to be the temp value
+				// I.e. for each row, swap the chars in the given columns
+			}
+			return new String(newKey);
+		}
+	}
+
+	// Swap Rows
+	private String swapRows(String key, int row1, int row2) {
+		// Works similar to swapping columns
+		if (row1 == row2) { // Making sure same row can't be passed in to be swapped
+			System.out.println("Same");
+			return swapRows(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
+		} else {
+			System.out.println("Different");
+			row1 = row1 * 5; // Need to get index, not row num -> 4th row = row 3 = 3*5 = index 15.
+			row2 = row2 * 5;
+			char[] newKey = key.toCharArray();
+			for(int i = 0; i < key.length() / 5 ; i++) {
+				char temp =  newKey[(i + row1)]; // Set temporary = newKey at index i + row number
+				newKey[(i + row1)] = newKey[(i + row2)]; // Set char at that index to be the char at that index + 2nd given row's number
+				newKey[(i + row2)] = temp; // Set that index to be the temp value
 				// I.e. for each row, swap the chars in the given columns
 			}
 			return new String(newKey);
