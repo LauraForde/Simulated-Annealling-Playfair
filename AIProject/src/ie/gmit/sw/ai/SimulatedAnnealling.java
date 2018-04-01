@@ -35,19 +35,30 @@ public class SimulatedAnnealling {
 		
 		for (int temp = 10; temp >= 0; temp--) {
 			for (int transitions = 50000; transitions >= 0; transitions--) {
-				String child = shuffle(key);
+				String childKey = modifyKey(key);
 				String[] childDigraphs = pf.makeDigraphs(decrypted);
-				String decryptChild = pf.decrypt(key, childDigraphs);
+				String decryptChild = pf.decrypt(childKey, childDigraphs);
 				System.out.println(decryptChild);
-				double childFitness = scoreFitness(decryptChild, key);
+				double childFitness = scoreFitness(decryptChild, childKey);
 				double delta = childFitness - parentFitness;
 				if (delta > 0) {
-					key = child;
+					key = childKey;
+					parentFitness = childFitness;
 					System.out.println("Child better, new key: " + key);
-				} else if (delta < 0){
-					System.out.println("Child not better");
+				} else if (delta <= 0){
+					System.out.println("Child not better, still using " + key + " with score " + parentFitness);
+					if(Math.exp((delta/temp)) > 0.5) { // Let the 
+						key = childKey;
+					}
 				}
-				
+				if(childFitness >= -5) {
+					System.out.println("Break");
+					break;
+				}
+			}
+			if(parentFitness >= -5) {
+				System.out.println("Break");
+				break;
 			}
 		}
 		return decrypted;
@@ -78,19 +89,8 @@ public class SimulatedAnnealling {
 	}
 	
 	public String modifyKey(String key){
-//		The method shuffleKey() on line 6 should make the following changes to the key with the frequency given 
-//		(you can approximate this using Math.random() * 100):
-//		Swap single letters (90%)
-//		Swap random rows (2%)
-//		Swap columns (2%)
-//		Flip all rows (2%)
-//		Flip all columns (2%)
-//		Reverse the whole key (2%) 
 		
-		//Random r = new Random(); // Using random to generate int
-		//int x = r.nextInt(99); // with random, 2% of time result will be 1 or 2, 2% of time result will be 3 or 4, so on
-		
-		int x = (int)(Math.random() * 100);
+		int x = (int)(Math.random() * 100); // Generate random number 0-99 inc
 		
 		if(x >= 0 && x < 2) {
 			// 2% of the time, reverse the whole key
@@ -98,25 +98,20 @@ public class SimulatedAnnealling {
 		} else if ( x >= 2 && x < 4) {
 			// 2%, flip all cols
 			return flipColumns(key);
-			
 		} else if ( x >= 4 && x < 6) {
 			// 2%, flip all rows
 			return flipRows(key);
-
 		} else if ( x >= 6 && x < 8) {
 			// 2%, swap cols
 			return swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
 		} else if ( x >= 8 && x < 10) {
 			// 2%, swap random rows
 			return swapRows(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
-
 		} else {
 			// 90%, swap single letters
-			
+			return swapLetters(key, (int)(Math.random() * (key.length()-1)), (int)(Math.random() * (key.length()-1)));
 		} // end if else for % of time do x
-		
-	    return key;
-	}
+	} // end 
 
 	// Shuffle function adapted from https://stackoverflow.com/a/3316696
 	public String shuffle(String input){
@@ -168,10 +163,10 @@ public class SimulatedAnnealling {
 	// Swap Columns
 	private String swapColumns(String key, int col1, int col2) {
 		if (col1 == col2) { // Making sure same column can't be passed in to be swapped
-			System.out.println("Same");
+			//System.out.println("Same");
 			return swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
 		} else {
-			System.out.println("Different");
+			//System.out.println("Different");
 			char[] newKey = key.toCharArray();
 			for(int i = 0; i < key.length() / 5 ; i++) {
 				int rowInd = i*5; // Row of index -> eg 2 = 10 (third row) - Accounting for each item in a column being 5 indices away from the items either side... if that makes sense...
@@ -188,10 +183,10 @@ public class SimulatedAnnealling {
 	private String swapRows(String key, int row1, int row2) {
 		// Works similar to swapping columns
 		if (row1 == row2) { // Making sure same row can't be passed in to be swapped
-			System.out.println("Same");
+			//System.out.println("Same");
 			return swapRows(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
 		} else {
-			System.out.println("Different");
+			//System.out.println("Different");
 			row1 = row1 * 5; // Need to get index, not row num -> 4th row = row 3 = 3*5 = index 15.
 			row2 = row2 * 5;
 			char[] newKey = key.toCharArray();
@@ -203,5 +198,18 @@ public class SimulatedAnnealling {
 			}
 			return new String(newKey);
 		}
+	}
+
+	private String swapLetters(String key, int l1, int l2) {
+		char[] newKey = key.toCharArray(); // Make a char array with given key string
+		
+		if(l1 == l2) { // If given indices are the same
+			l2 = (int)(Math.random() * (key.length()-1));
+		}
+		char temp = newKey[l1];
+		newKey[l1] = newKey[l2];
+		newKey[l2] = temp;
+
+		return new String(newKey);
 	}
 }
