@@ -33,27 +33,22 @@ public class CipherBreaker {
 		
 		String key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 		PlayfairImpl.printMatrix(key);
-		String nKey = flipColumns(key);
+		//String nKey = flipRows(key);
 		System.out.println("New Key:");
-		PlayfairImpl.printMatrix(nKey);
+		//PlayfairImpl.printMatrix(nKey);
 		
 	}
 	
-	private static String flipColumns(String key) {
-		char[] newKey = key.toCharArray(); // Make a char array with given key string
-		int length = key.length() - (key.length()/5);  // Length = length of original key minus (length / 5) -> 25 - (25/5 = 5) = 20. Solves out of bounds issue.
+	private static String flipRows(String key) {
+		String[] newRow = new String[5]; // String array for any new row, length 5
+		StringBuilder newKey = new StringBuilder(); // Using string builder to make it easy to add each new row to new key string
 		
-		for(int i = 0; i < key.length() / 5; i++) { // For each char in key
-			for(int j = 0; j < key.length() / 5; j++) { // for each char in row (length/5(rows) = 5)
-				// Multiplying by 5 because basically swapping chars with char in same col diff row.
-				char temp = key.charAt(i*5 + j); // Save char at pos i*5 + j, ex: 3*5 + 4 = 19, into temp var
-				newKey[(i*5) + j] =  key.charAt(length + j); // Set the char at that pos in the new array to be char in original key at length+j
-				newKey[length + j] =  temp; // Set the char at length + j to the temp character.
-				// Tested using PlayfairImpl.printMatrix(key), does flip all columns.
-			}
-			length = length - 5;
+		for(int i = 0; i < 5; i++) { // For each row in the key, i.e. 5 rows
+			String row = key.substring(i*5, i*5 + 5); // Get the row substring of the key based on for loop index - 2*5, 2*5 +5 = 10 to 15 
+			String revRow = new StringBuffer(row).reverse().toString(); // Reverse the stringified row, need StringBuffer for reversing
+			newKey.append(revRow); // Append the reversed row to the new key
 		}
-		return new String(newKey);
-		
+		return newKey.toString(); // Return stringified new key
 	}
+	
 }
