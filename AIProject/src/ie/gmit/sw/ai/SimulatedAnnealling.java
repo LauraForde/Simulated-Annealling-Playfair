@@ -1,6 +1,8 @@
 package ie.gmit.sw.ai;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,57 +10,45 @@ import java.util.Random;
 
 public class SimulatedAnnealling {
 	
-	/* Steps
-	 * 	1. Generate a random 25 letter key called parent
-	 * 	2. Decrypt the cipher text with the key
-	 * 	3. Score the fitness of the key as logProbability(parent)
-	 * 	4. For temp = 10 to 0, step -1
-	 * 	5.   For transitions = 50,000 to 0, step -1
-	 * 	6.		Set child = shuffleKey(parent) // Make small change to the key
-	 * 	7.		Score the fitness of the key as logProbability(child)
-	 * 	8.		Set delta = logProbability(child) - logProbability(parent)
-	 * 	9.		If delta > 0 // i.e. new key better
-	 * 10.		  Set parent = child
-	 * 11.		Else if delta < 0
-	 * 12.		  Set parent = [ child with prob e^(-delta / temp) ]
-	 * 		 // end for transitions
-	 * 	   // end for temp 
-	 */
+	PlayfairImpl pf = new PlayfairImpl();
+	FilePreparer fp = new FilePreparer();
+	Key k = new Key();
 	
-	// Decrypt using a given key
-	public String decrypt(String[] digraphs) throws IOException {
-		String key = shuffle("ABCDEFGHIKLMNOPQRSTUVWXYZ");
-		PlayfairImpl pf = new PlayfairImpl();
-		String decrypted = pf.decrypt(key, digraphs);
+	private String parentKey;
+	private String childKey;
+	private double keyFitness;
+	
+	String filename = "EncryptedExamTips.txt";
+	Path path = FileSystems.getDefault().getPath(filename);
+	String primedText = pf.primePlainTxt(fp.readFile(path));
+	String[] digraphs = pf.makeDigraphs(primedText);
+	String initialKey = k.shuffle(); 
+	
+	public String decrypt(String primedText) throws IOException {		
+		String decrypted = pf.pfDecrypt(initialKey, digraphs);
+		keyFitness = scoreFitness(decrypted, initialKey);
+		parentKey = initialKey;
 		
-		double parentFitness = scoreFitness(decrypted, key);
-		
-		for (int temp = 10; temp >= 0; temp--) {
-			for (int transitions = 50000; transitions >= 0; transitions--) {
-				String childKey = modifyKey(key);
-				String[] childDigraphs = pf.makeDigraphs(decrypted);
-				String decryptChild = pf.decrypt(childKey, childDigraphs);
-				System.out.println(decryptChild);
-				double childFitness = scoreFitness(decryptChild, childKey);
-				double delta = childFitness - parentFitness;
-				if (delta > 0) {
-					key = childKey;
-					parentFitness = childFitness;
-					System.out.println("Child better, new key: " + key);
-				} else if (delta <= 0){
-					System.out.println("Child not better, still using " + key + " with score " + parentFitness);
-					if(Math.exp((delta/temp)) > 0.5) { // Let the 
-						key = childKey;
-					}
+		for (int i = 5; i > 0; i--) {
+			for (int j = 50000; j > 0; j--) {
+				childKey = k.modifyKey(parentKey);
+				String[] tmpDigraphs = pf.makeDigraphs(primedText);
+				String tmpDcrypt = pf.pfDecrypt(childKey, tmpDigraphs);		
+				
+				
+				double childFitness = scoreFitness(tmpDcrypt, childKey);
+				double delta = childFitness - keyFitness;
+				if(delta > 0) {
+					parentKey = childKey;
+					keyFitness = childFitness;
+					System.out.println("Child better, new key: " + parentKey);
+				}else if(delta < 0){ 
+					double p = Math.pow(Math.E,(delta/10));
+					if (p > 0.5) {
+						System.out.println("Child not better, still using " + parentKey + " with score " + keyFitness);
+						parentKey = childKey;
+						keyFitness = childFitness;					}
 				}
-				if(childFitness >= -5) {
-					System.out.println("Break");
-					break;
-				}
-			}
-			if(parentFitness >= -5) {
-				System.out.println("Break");
-				break;
 			}
 		}
 		return decrypted;
@@ -71,8 +61,8 @@ public class SimulatedAnnealling {
 		double score = 0;
 		
 		int limit = decrypted.length();
-		if(limit > 23) // Not going to test entire text file, will work on 400 quadgrams
-			limit = 23; // 403 = index of last letter in 400th quadgram (399-403)
+		if(limit > 403) // Not going to test entire text file, will work on 400 quadgrams
+			limit = 403; // 403 = index of last letter in 400th quadgram (399-403)
 
 		for (int index = 0; index <= limit - 4; index++) {
 			//System.out.print((index + 1) + ". " + decrypted.substring(index, index + 4) + "[" + index + "-" + (index+4) + "]" + "\n");
@@ -82,134 +72,10 @@ public class SimulatedAnnealling {
 				score = score + Math.log10(occurences/389373);
 			}
 		}
-		System.out.println("Score: " + score);		
+		//System.out.println("Score: " + score);		
 		
 		return score;
 
 	}
 	
-	public String modifyKey(String key){
-		
-		int x = (int)(Math.random() * 100); // Generate random number 0-99 inc
-		
-		if(x >= 0 && x < 2) {
-			// 2% of the time, reverse the whole key
-			return new StringBuffer(key).reverse().toString(); // Simple built in reverse string stuff 
-		} else if ( x >= 2 && x < 4) {
-			// 2%, flip all cols
-			return flipColumns(key);
-		} else if ( x >= 4 && x < 6) {
-			// 2%, flip all rows
-			return flipRows(key);
-		} else if ( x >= 6 && x < 8) {
-			// 2%, swap cols
-			return swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
-		} else if ( x >= 8 && x < 10) {
-			// 2%, swap random rows
-			return swapRows(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
-		} else {
-			// 90%, swap single letters
-			return swapLetters(key, (int)(Math.random() * (key.length()-1)), (int)(Math.random() * (key.length()-1)));
-		} // end if else for % of time do x
-	} // end 
-
-	// Shuffle function adapted from https://stackoverflow.com/a/3316696
-	public String shuffle(String input){
-        List<Character> characters = new ArrayList<Character>();
-        for(char c:input.toCharArray()){
-            characters.add(c);
-        }
-        StringBuilder output = new StringBuilder(input.length());
-        while(characters.size()!=0){
-            int randPicker = (int)(Math.random()*characters.size());
-            output.append(characters.remove(randPicker));
-        }
-        
-        return output.toString();
-    }
-
-	// Functions for modifying key, separating into their own functions because tidied than lumping it all into the for loop
-	
-	// Flip Columns
-	private String flipColumns(String key) {
-		char[] newKey = key.toCharArray(); // Make a char array with given key string
-		int length = key.length() - (key.length()/5);  // Length = length of original key minus (length / 5) -> 25 - (25/5 = 5) = 20. Solves out of bounds issue.
-		
-		for(int i = 0; i < key.length() / 5; i++) { // For each char in key
-			for(int j = 0; j < key.length() / 5; j++) { // for each char in row (length/5(rows) = 5)
-				// Multiplying by 5 because basically swapping chars with char in same col diff row.
-				char temp = key.charAt(i*5 + j); // Save char at pos i*5 + j, ex: 3*5 + 4 = 19, into temp var
-				newKey[(i*5) + j] =  key.charAt(length + j); // Set the char at that pos in the new array to be char in original key at length+j
-				newKey[length + j] =  temp; // Set the char at length + j to the temp character.
-				// Tested using PlayfairImpl.printMatrix(key), does flip all columns.
-			}
-			length = length - 5;
-		}
-		return new String(newKey);
 	}
-	
-	// Flip Rows
-	private String flipRows(String key) {
-		StringBuilder newKey = new StringBuilder(); // Using string builder to make it easy to add each new row to new key string
-		
-		for(int i = 0; i < 5; i++) { // For each row in the key, i.e. 5 rows
-			String row = key.substring(i*5, i*5 + 5); // Get the row substring of the key based on for loop index - 2*5, 2*5 +5 = 10 to 15 
-			String revRow = new StringBuffer(row).reverse().toString(); // Reverse the stringified row, need StringBuffer for reversing
-			newKey.append(revRow); // Append the reversed row to the new key
-		}
-		return newKey.toString(); // Return stringified new key
-	}
-
-	// Swap Columns
-	private String swapColumns(String key, int col1, int col2) {
-		if (col1 == col2) { // Making sure same column can't be passed in to be swapped
-			//System.out.println("Same");
-			return swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
-		} else {
-			//System.out.println("Different");
-			char[] newKey = key.toCharArray();
-			for(int i = 0; i < key.length() / 5 ; i++) {
-				int rowInd = i*5; // Row of index -> eg 2 = 10 (third row) - Accounting for each item in a column being 5 indices away from the items either side... if that makes sense...
-				char temp =  newKey[(rowInd + col1)]; // Set temporary = newKey at row index + column number
-				newKey[(rowInd + col1)] = newKey[(rowInd + col2)]; // Set char at that index to be the char on the same row but in the second column
-				newKey[(rowInd + col2)] = temp; // Set that index to be the temp value
-				// I.e. for each row, swap the chars in the given columns
-			}
-			return new String(newKey);
-		}
-	}
-
-	// Swap Rows
-	private String swapRows(String key, int row1, int row2) {
-		// Works similar to swapping columns
-		if (row1 == row2) { // Making sure same row can't be passed in to be swapped
-			//System.out.println("Same");
-			return swapRows(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
-		} else {
-			//System.out.println("Different");
-			row1 = row1 * 5; // Need to get index, not row num -> 4th row = row 3 = 3*5 = index 15.
-			row2 = row2 * 5;
-			char[] newKey = key.toCharArray();
-			for(int i = 0; i < key.length() / 5 ; i++) {
-				char temp =  newKey[(i + row1)]; // Set temporary = newKey at index i + row number
-				newKey[(i + row1)] = newKey[(i + row2)]; // Set char at that index to be the char at that index + 2nd given row's number
-				newKey[(i + row2)] = temp; // Set that index to be the temp value
-				// I.e. for each row, swap the chars in the given columns
-			}
-			return new String(newKey);
-		}
-	}
-
-	private String swapLetters(String key, int l1, int l2) {
-		char[] newKey = key.toCharArray(); // Make a char array with given key string
-		
-		if(l1 == l2) { // If given indices are the same
-			l2 = (int)(Math.random() * (key.length()-1));
-		}
-		char temp = newKey[l1];
-		newKey[l1] = newKey[l2];
-		newKey[l2] = temp;
-
-		return new String(newKey);
-	}
-}

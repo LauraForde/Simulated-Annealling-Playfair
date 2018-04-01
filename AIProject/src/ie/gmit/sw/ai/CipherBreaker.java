@@ -14,20 +14,21 @@ public class CipherBreaker {
 	public static void main(String[] args) throws IOException {
 		SimulatedAnnealling sa = new SimulatedAnnealling();
 		PlayfairImpl pf = new PlayfairImpl();
+		FilePreparer fp = new FilePreparer();
 
 		String filename = "EncryptedExamTips.txt";
 		//System.out.println("Working Directory = " + System.getProperty("user.dir")); // Get current directory, adapted from https://stackoverflow.com/a/7603444
 		Path path = FileSystems.getDefault().getPath(filename);
 		//System.out.println("Path: " + path);
 		
-		String primedText = pf.primePlainTxt(FilePreparer.readFile(path));
-		String[] digraphs = pf.makeDigraphs(primedText);
+		String primedText = pf.primePlainTxt(fp.readFile(path));
+		//String[] digraphs = pf.makeDigraphs(primedText);
 		//System.out.println("\n1. Primed Text: " + primedText);
 		//System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
 
 		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
 
-		String decrypted = sa.decrypt(digraphs);
+		String decrypted = sa.decrypt(primedText);
 		//String decrypted = pf.decrypt(key, digraphs);
 		System.out.println("\nDecrypted: \n" + decrypted);
 		

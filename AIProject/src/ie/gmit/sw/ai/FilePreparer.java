@@ -9,7 +9,7 @@ import java.util.Map;
 public class FilePreparer {
 	
 	// Read the file
-	public static String readFile(Path file) {
+	public String readFile(Path file) {
 		String fileString = "";
 		
 		// Adapted from https://docs.oracle.com/javase/tutorial/essential/io/file.html#textfiles
@@ -39,17 +39,6 @@ public class FilePreparer {
             map.put(parts[0], Double.parseDouble(parts[1]));
         }
         in.close();
-
-    	/*int count = 0;
-        for (String gram: map.keySet()){
-            if (count < 5) {
-            	String key = gram.toString();
-            	String value = map.get(gram).toString();  
-            	System.out.print(key + " " + value + "\t");
-            	count++;
-            }
-        } */
-        
 		return map;
 	}
 

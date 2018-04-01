@@ -81,12 +81,12 @@ public class PlayfairImpl {
 		System.out.println();
     }
 	
-	public String decrypt(String matrix, String[] digraphs) {
+	public String pfDecrypt(String matrix, String[] digraphs) {
 		// Running into trouble... better to just work with string matrix???? Array too complex..?
 		// Can surely do calculations on "THEQUICKBROWNFXMPDVLAZYGS" to get "location"... maybe. Will try that out
 
 		StringBuilder plainText = new StringBuilder(); // Using Stringbuilder again to build the decrypted text
-		System.out.println("\nKey: " + matrix);
+		//System.out.println("\nKey: " + matrix);
 		
         for (String digraph : digraphs) {
         	 // indexOf returns the index of a given character, if null returns null
