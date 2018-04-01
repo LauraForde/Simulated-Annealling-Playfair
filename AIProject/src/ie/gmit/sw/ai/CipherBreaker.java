@@ -11,6 +11,7 @@ import java.nio.file.Path;
 public class CipherBreaker {
 
 	public static void main(String[] args) throws IOException {
+		/*
 		SimulatedAnnealling sa = new SimulatedAnnealling();
 		PlayfairImpl pf = new PlayfairImpl();
 
@@ -28,7 +29,14 @@ public class CipherBreaker {
 
 		String decrypted = sa.decrypt(digraphs);
 		//String decrypted = pf.decrypt(key, digraphs);
-		System.out.println("\nDecrypted: \n" + decrypted);
+		System.out.println("\nDecrypted: \n" + decrypted);*/
+		
+		for (int i = 0; i < 100; i++) {
+			int x = (int)(Math.random() * 100);
+			System.out.print(x + ", ");
+		}
+		
+	
 	
 	}
 }

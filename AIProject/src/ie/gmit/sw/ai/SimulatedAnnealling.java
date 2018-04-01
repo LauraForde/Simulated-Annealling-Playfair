@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class SimulatedAnnealling {
 	
@@ -76,26 +77,44 @@ public class SimulatedAnnealling {
 
 	}
 	
-	public String doLooping(double score, String parent) {
-		/* 	4. For temp = 10 to 0, step -1
-	 * 	5.   For transitions = 50,000 to 0, step -1
-	 * 	6.		Set child = shuffleKey(parent) // Make small change to the key
-	 * 	7.		Score the fitness of the key as logProbability(child)
-	 * 	8.		Set delta = logProbability(child) - logProbability(parent)
-	 * 	9.		If delta > 0 // i.e. new key better
-	 * 10.		  Set parent = child
-	 * 11.		Else if delta < 0
-	 * 12.		  Set parent = [ child with prob e^(-delta / temp) ]
-	 * 		 // end for transitions
-	 * 	   // end for temp */
-
+	public String modifyKey(String key){
+//		The method shuffleKey() on line 6 should make the following changes to the key with the frequency given 
+//		(you can approximate this using Math.random() * 100):
+//		Swap single letters (90%)
+//		Swap random rows (2%)
+//		Swap columns (2%)
+//		Flip all rows (2%)
+//		Flip all columns (2%)
+//		Reverse the whole key (2%) 
 		
+		//Random r = new Random(); // Using random to generate int
+		//int x = r.nextInt(99); // with random, 2% of time result will be 1 or 2, 2% of time result will be 3 or 4, so on
 		
-		return null;
-
+		int x = (int)(Math.random() * 100);
 		
+		if(x >= 0 && x < 2) {
+			// 2% of the time, reverse the whole key
+			return new StringBuffer(key).reverse().toString();
+		} else if ( x >= 2 && x < 4) {
+			// 2%, flip all cols
+			
+		} else if ( x >= 4 && x < 6) {
+			// 2%, flip all rows
+			
+		} else if ( x >= 6 && x < 8) {
+			// 2%, swap cols
+			
+		} else if ( x >= 8 && x < 10) {
+			// 2%, swap random rows
+			
+		} else {
+			// 90%, swap single letters
+			
+		} // end if else for % of time do x
+		
+	    return key;
 	}
-	
+
 	// Shuffle function adapted from https://stackoverflow.com/a/3316696
 	public String shuffle(String input){
         List<Character> characters = new ArrayList<Character>();
