@@ -33,7 +33,7 @@ public class CipherBreaker {
 		
 		String key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 		PlayfairImpl.printMatrix(key);
-		String nKey = swapColumns(key, 2, 2); // Try swapping cols 2 and 4
+		String nKey = swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4)); // Try swapping cols 2 and 4
 		System.out.println("New Key:");
 		PlayfairImpl.printMatrix(nKey);
 		
@@ -42,20 +42,19 @@ public class CipherBreaker {
 	private static String swapColumns(String key, int col1, int col2) {
 		if (col1 == col2) { // Making sure same column can't be passed in to be swapped
 			System.out.println("Same");
-			col1 = 2;
-			col2 = 4;
+			return swapColumns(key, (int)(Math.random() * 4), (int)(Math.random() * 4));
+		} else {
+			System.out.println("Different");
+			char[] newKey = key.toCharArray();
+			for(int i = 0; i < key.length() / 5 ; i++) {
+				int rowInd = i*5; // Row of index -> eg 2 = 10 (third row) - Accounting for each item in a column being 5 indices away from the items either side... if that makes sense...
+				char temp =  newKey[(rowInd + col1)]; // Set temporary = newKey at row index + column number
+				newKey[(rowInd + col1)] = newKey[(rowInd + col2)]; // Set char at that index to be the char on the same row but in the second column
+				newKey[(rowInd + col2)] = temp; // Set that index to be the temp value
+				// I.e. for each row, swap the chars in the given columns
+			}
+			return new String(newKey);
 		}
-
-		System.out.println("Different");
-		char[] newKey = key.toCharArray();
-		for(int i = 0; i < key.length() / 5 ; i++) {
-			int rowInd = i*5; // Row of index -> eg 2 = 10 (third row) - Accounting for each item in a column being 5 indices away from the items either side... if that makes sense...
-			char temp =  newKey[(rowInd + col1)]; // Set temporary = newKey at row index + column number
-			newKey[(rowInd + col1)] = newKey[(rowInd + col2)]; // Set char at that index to be the char on the same row but in the second column
-			newKey[(rowInd + col2)] = temp; // Set that index to be the temp value
-			// I.e. for each row, swap the chars in the given columns
-		}
-		return new String(newKey);
 	}
 	
 }
