@@ -94,9 +94,10 @@ public class SimulatedAnnealling {
 		
 		if(x >= 0 && x < 2) {
 			// 2% of the time, reverse the whole key
-			return new StringBuffer(key).reverse().toString();
+			return new StringBuffer(key).reverse().toString(); // Simple built in reverse string stuff 
 		} else if ( x >= 2 && x < 4) {
 			// 2%, flip all cols
+			flipColumns(key);
 			
 		} else if ( x >= 4 && x < 6) {
 			// 2%, flip all rows
@@ -130,4 +131,6 @@ public class SimulatedAnnealling {
         return output.toString();
     }
 
+	// Functions for modifying key, separating into their own functions because tidied than lumping it all into the for loop
+	
 }
