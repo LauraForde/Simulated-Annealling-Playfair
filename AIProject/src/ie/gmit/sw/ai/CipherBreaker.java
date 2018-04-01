@@ -33,14 +33,24 @@ public class CipherBreaker {
 		
 		String key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 		PlayfairImpl.printMatrix(key);
-		String nKey = swapLetters(key);
+		String nKey = swapLetters(key, (int)(Math.random() * (key.length()-1)), (int)(Math.random() * (key.length()-1)));
+		//String nKey = swapLetters(key, 2, 2);
 		System.out.println("New Key:");
 		PlayfairImpl.printMatrix(nKey);
 		
 	}
 
-	private static String swapLetters(String key) {
+	private static String swapLetters(String key, int l1, int l2) {
 		char[] newKey = key.toCharArray(); // Make a char array with given key string
+		
+		if(l1 == l2) { // If given indices are the same
+			l2 = (int)(Math.random() * (key.length()-1));
+		}
+
+		System.out.println("swap " + newKey[l1] + " & "+ newKey[l2]);
+		char temp = newKey[l1];
+		newKey[l1] = newKey[l2];
+		newKey[l2] = temp;
 
 		return new String(newKey);
 	}
