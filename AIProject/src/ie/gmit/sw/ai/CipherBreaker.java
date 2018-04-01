@@ -33,22 +33,29 @@ public class CipherBreaker {
 		
 		String key = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 		PlayfairImpl.printMatrix(key);
-		//String nKey = flipRows(key);
+		String nKey = swapColumns(key, 2, 2); // Try swapping cols 2 and 4
 		System.out.println("New Key:");
-		//PlayfairImpl.printMatrix(nKey);
+		PlayfairImpl.printMatrix(nKey);
 		
 	}
 	
-	private static String flipRows(String key) {
-		String[] newRow = new String[5]; // String array for any new row, length 5
-		StringBuilder newKey = new StringBuilder(); // Using string builder to make it easy to add each new row to new key string
-		
-		for(int i = 0; i < 5; i++) { // For each row in the key, i.e. 5 rows
-			String row = key.substring(i*5, i*5 + 5); // Get the row substring of the key based on for loop index - 2*5, 2*5 +5 = 10 to 15 
-			String revRow = new StringBuffer(row).reverse().toString(); // Reverse the stringified row, need StringBuffer for reversing
-			newKey.append(revRow); // Append the reversed row to the new key
+	private static String swapColumns(String key, int col1, int col2) {
+		if (col1 == col2) { // Making sure same column can't be passed in to be swapped
+			System.out.println("Same");
+			col1 = 2;
+			col2 = 4;
 		}
-		return newKey.toString(); // Return stringified new key
+
+		System.out.println("Different");
+		char[] newKey = key.toCharArray();
+		for(int i = 0; i < key.length() / 5 ; i++) {
+			int rowInd = i*5; // Row of index -> eg 2 = 10 (third row) - Accounting for each item in a column being 5 indices away from the items either side... if that makes sense...
+			char temp =  newKey[(rowInd + col1)]; // Set temporary = newKey at row index + column number
+			newKey[(rowInd + col1)] = newKey[(rowInd + col2)]; // Set char at that index to be the char on the same row but in the second column
+			newKey[(rowInd + col2)] = temp; // Set that index to be the temp value
+			// I.e. for each row, swap the chars in the given columns
+		}
+		return new String(newKey);
 	}
 	
 }

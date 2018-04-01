@@ -154,7 +154,6 @@ public class SimulatedAnnealling {
 	
 	// Flip Rows
 	private String flipRows(String key) {
-		String[] newRow = new String[5]; // String array for any new row, length 5
 		StringBuilder newKey = new StringBuilder(); // Using string builder to make it easy to add each new row to new key string
 		
 		for(int i = 0; i < 5; i++) { // For each row in the key, i.e. 5 rows
