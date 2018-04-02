@@ -1,13 +1,14 @@
 package ie.gmit.sw.ai;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 // Moved all key-related operations into its own class
 
 public class Key {
 	final String alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 	
+	// Modify the original random key using the given rules
 	public String modifyKey(String key){
 		
 		int x = (int)(Math.random() * 100); // Generate random number 0-99 inc
@@ -33,19 +34,20 @@ public class Key {
 		} // end if else for % of time do x
 	} // end 
 
-	// Shuffle function adapted from https://stackoverflow.com/a/3316696
+	// Fisher-Yates Shuffle, adapted from project spec
 	public String shuffle(){
-        List<Character> characters = new ArrayList<Character>();
-        for(char c:alphabet.toCharArray()){
-            characters.add(c);
-        }
-        StringBuilder output = new StringBuilder(alphabet.length());
-        while(characters.size()!=0){
-            int randPicker = (int)(Math.random()*characters.size());
-            output.append(characters.remove(randPicker));
-        }
-        
-        return output.toString();
+		int index;
+		 Random random = ThreadLocalRandom.current();
+		 char[] key = alphabet.toCharArray();
+		 for (int i = key.length - 1; i > 0; i--) {
+			 index = random.nextInt(i + 1);
+			 if (index != i) {
+				 key[index] ^= key[i];
+				 key[i] ^= key[index];
+				 key[index] ^= key[i];
+			 }
+		 }
+		return new String(key);
     }
 
 	// Functions for modifying key----------------------------------------------------------------------------------
@@ -119,6 +121,7 @@ public class Key {
 		}
 	}
 
+	// Swap Random Letters
 	private String swapLetters(String key, int l1, int l2) {
 		char[] newKey = key.toCharArray(); // Make a char array with given key string
 		

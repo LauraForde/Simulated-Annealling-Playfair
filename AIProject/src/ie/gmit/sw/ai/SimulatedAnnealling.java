@@ -2,40 +2,43 @@ package ie.gmit.sw.ai;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class SimulatedAnnealling {
 	
 	PlayfairImpl pf = new PlayfairImpl();
 	FilePreparer fp = new FilePreparer();
 	Key k = new Key();
+	public int temp = 6;
 	
-	private String parentKey = k.shuffle();
-	private String childKey;
-	private double keyFitness;
-	
-	public String decrypt(String[] digraphs) throws IOException {		
+	public String decrypt(String[] digraphs) throws IOException {	
+		String parentKey = k.shuffle();
+		String childKey;
+		double keyFitness;
 		String decrypted = pf.pfDecrypt(parentKey, digraphs);
 		keyFitness = scoreFitness(decrypted);
 		
-		for (int i = 7; i > 0; i--) {
+		for (int i = temp; i > 0; i--) {
 			for (int j = 50000; j > 0; j--) {
-				childKey = k.modifyKey(parentKey); // Make a small change to the parent key
-				String tmpDcrypt = pf.pfDecrypt(childKey, digraphs);		
-				double childFitness = scoreFitness(tmpDcrypt); // Score the fitness of the new key
+				childKey = k.modifyKey(parentKey);
+				double childFitness = 0;
+				double delta;
+				String tmpDcrypt = pf.pfDecrypt(childKey, digraphs);
+				childFitness = scoreFitness(tmpDcrypt);
 				
-				double delta = childFitness - keyFitness;
-				if(childFitness > keyFitness) {
+				delta = childFitness - keyFitness;
+				if(delta > 0) {
 					parentKey = childKey;
 					keyFitness = childFitness;
-					System.out.println("Child better, new key: " + parentKey + ", score: " + keyFitness + ". Decrypted: " + tmpDcrypt);
-				}else if(delta < 0){ 
-					double p = Math.pow(Math.E,(delta/6));
-					if (p > 0.5) {
-						System.out.println("Child not better, still using " + parentKey + " with score " + keyFitness+ ". Decrypted: " + tmpDcrypt);
+					decrypted = tmpDcrypt;
+					System.out.println("New better key: " + parentKey + " with score " + keyFitness + ". Decrypted: " + tmpDcrypt);
+				}else if(delta < 0){
+					if(Math.log10(childFitness) > Math.pow(Math.E, (-delta/6))) {
 						parentKey = childKey;
-						keyFitness = childFitness;					
+						keyFitness = childFitness;
+						decrypted = tmpDcrypt;
+						System.out.println("New key: " + parentKey + " with score " + keyFitness+ ". Decrypted: " + tmpDcrypt);
 					}
-					//System.out.println("D: " + delta + ". " + childKey  + ", score " + childFitness + ", not accept.");
 				}
 			}
 		}
@@ -46,6 +49,15 @@ public class SimulatedAnnealling {
 	public double scoreFitness(String decrypted) throws IOException {
 		Map<String, Double> quadgrams = FilePreparer.getQuad();
 		double score = 0;
+		double total = 0;
+		
+		// Calculate total of all probabilities in 4grams.txt
+		for (Entry<String, Double> gram : quadgrams.entrySet()) {
+			if (quadgrams.keySet().contains(gram.getKey())) {
+				double prob = Math.log10(gram.getValue());
+				total = total + prob;
+			}			
+		}		
 		
 		int limit = decrypted.length();
 		if(limit > 45) // Not going to test entire text file, will work on 400 quadgrams
@@ -54,7 +66,7 @@ public class SimulatedAnnealling {
 		for (int index = 0; index <= decrypted.length() - 4; index++) {
 			Double occurences = (Double) quadgrams.get(decrypted.substring(index, index + 4));
 			if (occurences != null) {
-				score += Math.log10(occurences / 389373);
+				score += Math.log10(occurences / total);
 				//System.out.println(decrypted.substring(index, index + 4) + ": " + Math.log10(occurences / 389373) + ", total: " + score);
 			}
 		}
