@@ -21,7 +21,8 @@ public class FilePreparer {
 		        fileString += line; // Add the current line to the file string
 		    }
 		} catch (IOException x) {
-		    System.err.format("IOException: %s%n", x);
+			System.out.println("Oops! File not found.");
+		    CipherBreaker.askFile();
 		}
 
 		return fileString;
