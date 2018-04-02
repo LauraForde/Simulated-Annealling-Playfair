@@ -29,16 +29,18 @@ public class FilePreparer {
 	}
 	
 	// Quadgram stuff
-	public static Map getQuad() throws IOException {
+	public static Map<String, Double> getQuad() throws IOException {
 		// https://stackoverflow.com/a/8886723
 		Map<String, Double> map = new HashMap<String, Double>(); // Should be <String, Integer> but will worry about that later
-        BufferedReader in = new BufferedReader(new FileReader("4grams.txt"));
-        String line = "";
-        while ((line = in.readLine()) != null) {
-            String[] parts = line.split(" ");
-            map.put(parts[0], Double.parseDouble(parts[1]));
-        }
-        in.close();
+	    BufferedReader in = new BufferedReader(new FileReader("4grams.txt"));
+	    String line = "";
+	    while ((line = in.readLine()) != null) {
+	        String[] parts = line.split(" ");
+	        map.put(parts[0], Double.parseDouble(parts[1]));
+	    }
+	    //Double value = map.get("TION");
+	    //System.out.println("tion: " + value);
+	    in.close();
 		return map;
 	}
 

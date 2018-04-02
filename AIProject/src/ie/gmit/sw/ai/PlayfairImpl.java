@@ -1,6 +1,6 @@
 package ie.gmit.sw.ai;
 
-public class PlayfairImpl {
+public class PlayfairImpl{
 	
 	// Step 1 - Prime the plain text 
 	public String primePlainTxt(String string) {
@@ -60,7 +60,7 @@ public class PlayfairImpl {
 	 	Decrypt by replacing cipher text letters the with letters immediately above. 
 	*/
 	
-	public static void printMatrix(String keystr) {
+	public void printMatrix(String keystr) {
 		int k = 0, k2 = 0; // index of string
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {

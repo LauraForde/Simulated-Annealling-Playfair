@@ -3,7 +3,6 @@
 
 package ie.gmit.sw.ai;
 
-import java.awt.BufferCapabilities.FlipContents;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -22,15 +21,15 @@ public class CipherBreaker {
 		//System.out.println("Path: " + path);
 		
 		String primedText = pf.primePlainTxt(fp.readFile(path));
-		//String[] digraphs = pf.makeDigraphs(primedText);
+		String[] digraphs = pf.makeDigraphs(primedText);
 		//System.out.println("\n1. Primed Text: " + primedText);
 		//System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
 
 		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
 
-		String decrypted = sa.decrypt(primedText);
+		sa.decrypt(digraphs);
 		//String decrypted = pf.decrypt(key, digraphs);
-		System.out.println("\nDecrypted: \n" + decrypted);
+		//System.out.println("\nDecrypted: \n" + decrypted);
 		
 	}
 
