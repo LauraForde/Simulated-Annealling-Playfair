@@ -11,7 +11,10 @@ public class SimulatedAnnealling {
 	Key k = new Key();
 	public int temp = 6;
 	
-	public String decrypt(String[] digraphs) throws IOException {	
+	public String decrypt(String[] digraphs, int timeLimit) throws IOException {	
+		// SA not working very well so setting a time limit on the program running - don't want user to be waiting 10 minutes.
+		long startTime = System.currentTimeMillis() + (timeLimit * 1000); // 120000ms = 2 mins
+				
 		String parentKey = k.shuffle();
 		String childKey;
 		double keyFitness;
@@ -20,24 +23,36 @@ public class SimulatedAnnealling {
 		
 		for (int i = temp; i > 0; i--) {
 			for (int j = 50000; j > 0; j--) {
-				childKey = k.modifyKey(parentKey);
-				double childFitness = 0;
-				double delta;
-				String tmpDcrypt = pf.pfDecrypt(childKey, digraphs);
-				childFitness = scoreFitness(tmpDcrypt);
-				
-				delta = childFitness - keyFitness;
-				if(delta > 0) {
-					parentKey = childKey;
-					keyFitness = childFitness;
-					decrypted = tmpDcrypt;
-					System.out.println("New better key: " + parentKey + " with score " + keyFitness + ". Decrypted: " + tmpDcrypt);
-				}else if(delta < 0){
-					if(Math.log10(childFitness) > Math.pow(Math.E, (-delta/6))) {
+				if (timeLimit > 0 && System.currentTimeMillis() > startTime) {
+					System.out.println("Time limit reached, terminating program.");
+					System.out.println("Best key found within limit: " + parentKey + "\nResult using key: " + decrypted);
+					i = 0;
+					j = 0;
+				} else if (timeLimit == 0 && System.currentTimeMillis() > (startTime + 600000)){
+					System.out.println("Upper 10 minute time limit reached, terminating program.");
+					System.out.println("Best key found within limit: " + parentKey + "\nResult using key: " + decrypted);
+					i = 0;
+					j = 0;
+				} else {
+					childKey = k.modifyKey(parentKey);
+					double childFitness = 0;
+					double delta;
+					String tmpDcrypt = pf.pfDecrypt(childKey, digraphs);
+					childFitness = scoreFitness(tmpDcrypt);
+					
+					delta = childFitness - keyFitness;
+					if(delta > 0) {
 						parentKey = childKey;
 						keyFitness = childFitness;
 						decrypted = tmpDcrypt;
-						System.out.println("New key: " + parentKey + " with score " + keyFitness+ ". Decrypted: " + tmpDcrypt);
+						//System.out.println("New better key: " + parentKey + " with score " + keyFitness + ". Decrypted: " + tmpDcrypt);
+					}else if(delta < 0){
+						if(Math.log10(childFitness) > Math.pow(Math.E, (-delta/6))) {
+							parentKey = childKey;
+							keyFitness = childFitness;
+							decrypted = tmpDcrypt;
+							//System.out.println("New key: " + parentKey + " with score " + keyFitness+ ". Decrypted: " + tmpDcrypt);
+						}
 					}
 				}
 			}

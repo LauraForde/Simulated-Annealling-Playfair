@@ -10,52 +10,49 @@ import java.util.Scanner;
 
 // Runner class - doesn't actually do anything, just calls other classes/methods
 public class CipherBreaker {
-	
-	SimulatedAnnealling sa = new SimulatedAnnealling();
 	static PlayfairImpl pf = new PlayfairImpl();
 	static FilePreparer fp = new FilePreparer();
 	static Scanner input = new Scanner(System.in);
 
 
 	public static void main(String[] args) throws IOException {
-		
-		
 		System.out.println("Enter Option: \n1. Decrypt a file\n2. Exit program");
-		menu();
-		
-		
+		menu(); // Run the menu method
 	}
 
+	// Handles getting choice from the user
 	public static void menu() {
 		int choice = input.nextInt();
 		switch (choice) {
 	        case 1:
-	            //System.out.println("Decrypt");
-	        	runProg();
+	        	runProg(); // User wants to decrypt file, execute runProg() method
 	            break;
 	        case 2:
-	            System.out.println("Quit");
+	            System.out.println("- Terminated Program -"); // User wants to quit
 	            break;
 	        default:
 	            System.out.println("Invalid option! Please choose an option from the menu below. \n1. Decrypt a file\n2. Exit program");
-	            menu(); // Handling possibility of 
+	            menu(); // Handling possibility of user entering invalid option, just call menu() until choice is valid
 	    }
 	
 	}
 	
 	public static void runProg() {
-		
+		SimulatedAnnealling sa = new SimulatedAnnealling();
 		String primedText = askFile();
 		String[] digraphs = pf.makeDigraphs(primedText);
-		//System.out.println("\n1. Primed Text: " + primedText);
-		//System.out.println("2. Digraphs: " + Arrays.toString(digraphs)); // Print array contents - https://stackoverflow.com/a/409795
+		
+		System.out.print("Please note this program could take a long time to find the correct key.\nEnter a time limit in seconds (the program will terminate and output the best key found up to that point).\nEnter 0 if you are happy to let the program run as long as required, up to a 10 minute cut off.\nTime Limit: ");
+		int timeLimit = input.nextInt();
 
-		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
-
-		//sa.decrypt(digraphs);
-		//sa.scoreFitness("ESSIOHFABNWCVZGOCOISKLYMTCESGDYAWEIRSIESFICIZQISDZDVIAISISCHEUYCALRYWSSIRSKNCHOUKSTCIFOXDTUKKNLNALOK");
-		//String decrypted = pf.decrypt(key, digraphs);
-		//System.out.println("\nDecrypted: \n" + decrypted);
+		try {
+			System.out.println("Decrypting... ");
+			sa.decrypt(digraphs, timeLimit);
+			
+		} catch (IOException e) {
+			System.out.println("Unable to decrypt. Please choose an option from the menu.");
+			menu();
+		}
 	}
 	
 	public static String askFile() {
@@ -67,7 +64,7 @@ public class CipherBreaker {
 		}
 		
 		Path path = FileSystems.getDefault().getPath(filename);
-		System.out.println("Path: " + path);
+		//System.out.println("Path: " + path);
 		String contents = pf.primePlainTxt(fp.readFile(path));
 		System.out.println(contents);
 		
