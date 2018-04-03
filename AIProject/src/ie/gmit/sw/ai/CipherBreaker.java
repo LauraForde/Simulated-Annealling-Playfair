@@ -13,13 +13,24 @@ public class CipherBreaker {
 	static PlayfairImpl pf = new PlayfairImpl();
 	static FilePreparer fp = new FilePreparer();
 	static Scanner input = new Scanner(System.in);
+	static SimulatedAnnealling sa = new SimulatedAnnealling();
 	static String filename;
 
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Enter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
 		menu(); // Run the menu method
-		
+
+//		askFile();
+//		Path path = FileSystems.getDefault().getPath(filename);
+//		
+//		String primedText = pf.primePlainTxt(fp.readFile(path));
+//		String[] digraphs = pf.makeDigraphs(primedText);
+//
+//		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
+//
+//		String decrypted = sa.decrypt(digraphs, 0);
+//		System.out.println("\nDecrypted: \n" + decrypted);
 	}
 
 	// Handles getting choice from the user
@@ -55,14 +66,14 @@ public class CipherBreaker {
 
 		try {
 			System.out.println("Decrypting... ");
-			decrypted = sa.decrypt(digraphs, timeLimit);
+			decrypted = sa.decrypt(digraphs, timeLimit, true); // Pass true to output the process
 			fp.writeFile(filename, decrypted);
 			
 		} catch (IOException e) {
 			System.out.println("Unable to decrypt. Please choose an option from the menu.");
 		}
-		System.out.println("\nEnter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
-		menu();
+		System.out.println("\nEnter Option: \n1. Decrypt File with Known Key)\n2. Decrypt File using Simulated Annealling\n3. Exit program");
+		//menu();
 	}
 	
 	public static void knownKey(String primedText) {
@@ -80,7 +91,7 @@ public class CipherBreaker {
 		fp.writeFile(filename, decrypted);
 		
 		System.out.println("\nDecrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds. \n\nEnter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
-		menu();
+		//menu();
 	
 	}
 	

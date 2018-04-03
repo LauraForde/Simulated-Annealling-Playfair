@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FilePreparer {
+	static Map<String, Double> map = new HashMap<String, Double>(); // Should be <String, Integer> but will worry about that later
 	
 	// Read the file
 	public String readFile(Path file) {
@@ -22,7 +23,7 @@ public class FilePreparer {
 		    }
 		} catch (IOException x) {
 			System.out.println("Oops! File not found.");
-		    CipherBreaker.askFile();
+		    //CipherBreaker.askFile();
 		}
 		return fileString;
 	}
@@ -47,7 +48,7 @@ public class FilePreparer {
 	public static Map<String, Double> getQuad() throws IOException {
 		// Read text file to map adapted from https://stackoverflow.com/a/8886723
 		Map<String, Double> map = new HashMap<String, Double>(); // Should be <String, Integer> but will worry about that later
-	    BufferedReader in = new BufferedReader(new FileReader("4grams.txt"));
+	    BufferedReader in = new BufferedReader(new FileReader("..\\4grams.txt"));
 	    String line = "";
 	    while ((line = in.readLine()) != null) {
 	        String[] parts = line.split(" ");
