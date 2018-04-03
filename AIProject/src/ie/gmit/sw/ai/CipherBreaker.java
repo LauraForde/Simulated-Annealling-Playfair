@@ -11,30 +11,20 @@ import java.util.Scanner;
 
 public class CipherBreaker {
 	static PlayfairImpl pf = new PlayfairImpl();
-	static FilePreparer fp = new FilePreparer();
-	static Scanner input = new Scanner(System.in);
+	static FileHandler fp = new FileHandler();
 	static SimulatedAnnealling sa = new SimulatedAnnealling();
+	static nGramHandler ngh = new nGramHandler();
+	
+	static Scanner input = new Scanner(System.in);
 	static String filename;
 
-
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		System.out.println("Enter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
 		menu(); // Run the menu method
-
-//		askFile();
-//		Path path = FileSystems.getDefault().getPath(filename);
-//		
-//		String primedText = pf.primePlainTxt(fp.readFile(path));
-//		String[] digraphs = pf.makeDigraphs(primedText);
-//
-//		//pf.printMatrix(key); // Prints two matrices, first is th given key and second is just ints 0-24
-//
-//		String decrypted = sa.decrypt(digraphs, 0);
-//		System.out.println("\nDecrypted: \n" + decrypted);
 	}
 
 	// Handles getting choice from the user
-	public static void menu() {
+	public static void menu() throws Exception {
 		int choice = input.nextInt();
 		String primedText;
 		switch (choice) {
@@ -55,39 +45,36 @@ public class CipherBreaker {
 	
 	}
 	
-	public static void runSimulatedAnnealling() {
-		SimulatedAnnealling sa = new SimulatedAnnealling();
+	public static void runSimulatedAnnealling() throws Exception {
 		String primedText = askFile();
-		String[] digraphs = pf.makeDigraphs(primedText);
 		String decrypted;
-
-		System.out.print("Please note this program could take a long time to find the correct key.\nEnter a time limit in seconds (the program will terminate and output the best key found up to that point).\nEnter 0 if you are happy to let the program run as long as required, up to a 10 minute cut off.\nTime Limit: ");
-		int timeLimit = input.nextInt();
+//
+//		System.out.print("Please note this program could take a long time to find the correct key.\nEnter a time limit in seconds (the program will terminate and output the best key found up to that point).\nEnter 0 if you are happy to let the program run as long as required, up to a 10 minute cut off.\nTime Limit: ");
+//		int timeLimit = input.nextInt();
 
 		try {
 			System.out.println("Decrypting... ");
-			decrypted = sa.decrypt(digraphs, timeLimit, true); // Pass true to output the process
+			decrypted = sa.decrypt(primedText); // Pass true to output the process
 			fp.writeFile(filename, decrypted);
 			
 		} catch (IOException e) {
 			System.out.println("Unable to decrypt. Please choose an option from the menu.");
 		}
-		System.out.println("\nEnter Option: \n1. Decrypt File with Known Key)\n2. Decrypt File using Simulated Annealling\n3. Exit program");
-		//menu();
+		System.out.println("\nEnter Option: \n1. Decrypt File with Known Key\n2. Decrypt File using Simulated Annealling\n3. Exit program");
+		menu();
 	}
 	
-	public static void knownKey(String primedText) {
-		long start = System.currentTimeMillis();
-		String[] digraphs = pf.makeDigraphs(primedText);
+	public static void knownKey(String primedText) throws Exception {
 		String decrypted;
 		System.out.print("Enter key to decrypt with: ");
 		String key = input.next(); 
 		key = key.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""); // Replace all non letter chars
+		long start = System.currentTimeMillis();
 		if(key.length() != 25) {
 			System.out.print("Key must be 25 characters in length and contain only letters! ");
 			knownKey(primedText);
 		}
-		decrypted = pf.pfDecrypt(key, digraphs);
+		decrypted = pf.decryptPF(key, primedText);
 		fp.writeFile(filename, decrypted);
 		
 		System.out.println("\nDecrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds. \n\nEnter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");

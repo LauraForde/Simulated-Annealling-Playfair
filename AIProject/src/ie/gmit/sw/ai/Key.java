@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 // Moved all key-related operations into its own class
 
 public class Key {
-	final String alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+	private final String alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
 	
 	// Modify the original random key using the given rules
 	public String modifyKey(String key){
