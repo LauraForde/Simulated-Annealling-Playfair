@@ -20,6 +20,7 @@ public class CipherBreaker {
 	public static void main(String[] args) throws Exception {
 		System.out.println("Enter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
 		menu(); // Run the menu method
+		//sa.scoreFitness("ZNTYZWXQRQRXLVYVDOTCZEZAPHZNFEMEIGIMTYZNTDVWUKTCKPXHBOYTYTLSTEFTEXQSOCTYEHFALSTWTUPHDTSREPLTFAAYEXWQ");
 	}
 
 	// Handles getting choice from the user
