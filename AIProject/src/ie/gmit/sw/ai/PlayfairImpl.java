@@ -1,19 +1,7 @@
 package ie.gmit.sw.ai;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class PlayfairImpl{
 
-	//private char[][] keyMatrix;
-	//private List<MatrixLookup> positions; // Holds list of all row,column positions of digraphs (row 2, col 4 etc etc)
-	
-	//public PlayfairImpl() {
-		//super();
-		//this.positions = new LinkedList<MatrixLookup>(); // Might need to use Linked, array faster for now
-		//this.keyMatrix = new char[5][5];
-	//}
-	
 	// Step 1 - Prime the plain text 
 	public String primePlainTxt(String string) {
 		// Pass the given string (uppercase and with no spaces ) to a new stringbuilder var
@@ -34,10 +22,14 @@ public class PlayfairImpl{
 		return str.toString();
 	}
 
+	// Commenting out Step 2 because no need to actually save digraphs when the text is just being parsed in twos in the decryptPF method anyway.
+	// Leaving it here to show work and thought process.
+	
 	// Step 2 - Break the plain text into digraphs
 	// Again, working with strings etc slows process down... easier to just work with indexes in SA/decrypt methods. Leaving here just in case.
 	// "ARTIFICIAL" becomes [AR, TI, FI, CI, AL]
-	public String[] makeDigraphs(String string) {
+	
+/*	public String[] makeDigraphs(String string) {
     
 		// Create a new string array of length [half of given string] - String of length 100 becomes array of 50 (2 chars per digraph)
         String digraphs[] = new String[string.length() / 2];
@@ -49,31 +41,59 @@ public class PlayfairImpl{
         }
         
         return digraphs;
+	}*/
+
+	// Gets key and encrypted text from SA, creates a matrix and loops through text 2 chars at a time to decrypt.
+	public String decryptPF(String key, String encryptedTxt) throws Exception {
+		// Make a matrix for the key. Was using strings initially but might be the reason for slowness?
+		char[][] keyMatrix = new char[5][5];
+		int index = 0;
+
+		for (int i = 0; i < 5; i++) { // For each "row" in the string
+			for (int j = 0; j < 5; j++) { // for each "column" in the string
+				keyMatrix[i][j] = key.charAt(index); // Set the keyMatrix at the current pos equal to the current index.
+				// e.g. - char at index 13 should go to 2, 4 
+				index++; // Increment index to get next char in key
+			}
+		}
+		StringBuilder humanReadable = new StringBuilder(); 
+		for (index = 0; index < encryptedTxt.length() / 2; index++) { // Start at 0, loop (half the number of characters in the text) times.
+				
+			// Note: I had the key implemented as a String at first but using a char array of [5][5] not only makes the process a lot faster,
+			// it makes decryption using keys a lot easier. See here - https://github.com/rebeccabernie/Simulated-Annealling-Playfair/blob/263c8b6fe62ecd091c6808bb4c5087a08561fbdc/AIProject/src/ie/gmit/sw/ai/PlayfairImpl.java
+			// for a historic version of this file, complete with explanations of that version.
+			
+			// Index works as such: index 0 deals with chars 0 and 1, index 1 deals with chars 1 and 2, so on and so forth.
+			char first = encryptedTxt.charAt(2 * index); // First char in digraph
+			char second = encryptedTxt.charAt(2 * index + 1);  // Second char in digraph
+			
+			// First char in digraph
+			int row1 = (int) MatrixLookup.getPosition(first, keyMatrix).getRowNum(); // Returns row number from MatrixLookup
+			int col1 = (int) MatrixLookup.getPosition(first, keyMatrix).getColNum(); // Return column number
+			// Second char in digraph
+			int row2 = (int) MatrixLookup.getPosition(second, keyMatrix).getRowNum();
+			int col2 = (int) MatrixLookup.getPosition(second, keyMatrix).getColNum();
+
+			// Have logic for all this in github history...
+			if (row1 == row2) { // Letters in the same row - replace letter with the letter to immediate LEFT. 
+				col1 = (col1 + 4) % 5; // Add 4, return remainder that divided by 5. eg. col2 should move to 1 - 2+4=6%5=1. 3+4=7%5=2.
+				col2 = (col2 + 4) % 5; // Do the same for second char's column.
+			} else if (col1 == col2) { // Letters in the same col - replace with letter ABOVE. Works basically the same as rows.
+				row1 = (row1 + 4) % 5; // Add 4 to row num... row2 +4=6%5= now in row 1.
+				row2 = (row2 + 4) % 5; // Same for the second char.
+			} else { // Letters are in different rows/columns
+				// Basically swap the column position of the first and second characters.
+				// e.g. top left and bottom right becomes BOTTOM left and TOP right. Easier to explain with diagrams...
+		        int temp = col1;
+		        col1 = col2;
+		        col2 = temp;
+		    }
+			humanReadable.append(keyMatrix[row1][col1] +""+ keyMatrix[row2][col2]); // Append the two chars to the humanReadable string builder
+		}
+		return humanReadable.toString(); // Return the stringified String Builder
 	}
-
-
-	// Based on Step 2 of PlayFair in spec
 	
-	/* Rule 1	Digraph Letters in different rows and columns
-		Create a “box” inside the matrix with each diagraph letter as a corner
-		read off the letter at the opposite corner of the same row 
-		-> cipher(B, P)={matrix[row(B)][col(P)], matrix[row(P)][col(B)]}.
-		Reverse to decrypt.
-	*/
-	
-	/* Rule 2	Digraph Letters in Same Row 
-	 	Replace any letters that appear on the same row with the letters to their immediate right
-	 	Wrap around the matrix if necessary. 
-	 	Decrypt by replacing cipher-text letters the with letters on their immediate left.
-	*/
-	
-	/* Rule 3	Digraph Letters in Same Column
-	 	Replace any letters that appear on the same column with the letters immediately below
-		Wrap back around the top of the column if necessary
-	 	Decrypt by replacing cipher text letters the with letters immediately above. 
-	*/
-	
-	// Print matrix, nothing important just prints the string in 5 x 5 format.
+	// Print the matrix, nothing important just prints a 25 character string nicely in 5 x 5 format.
 	public void printMatrix(String keystr) {
 		int k = 0, k2 = 0; // index of string
 		for (int i = 0; i < 5; i++) {
@@ -93,56 +113,6 @@ public class PlayfairImpl{
 		}
 		
 		System.out.println();
-    }
-	
-	// Gets key and encrypted text from SA, creates a matrix and passes matrix and text to actual decrypting method.
-	public String decryptPF(String key, String encryptedTxt) throws Exception {
-		// Make a matrix for the key. Was using strings initially but might be the reason for slowness?
-		char[][] keyMatrix = new char[5][5];
-		int index = 0;
-
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				keyMatrix[i][j] = key.charAt(index);
-				index++;
-			}
-		}
-		StringBuilder decryptedText = new StringBuilder();
-		return breakPlayfair(keyMatrix, encryptedTxt, 0, decryptedText);
 	}
-	
-	private String breakPlayfair(char[][] keyMatrix, String encryptedText, int index, StringBuilder decryptedText) {
-		// Actual breaking of the playfair cipher
-		
-		if(index <  encryptedText.length() / 2) {
-			char first = encryptedText.charAt(2 * index); // First char in digraph
-			char second = encryptedText.charAt(2 * index + 1);  // Second char in digraph
-			// First char in digraph
-			int r1 = (int) MatrixLookup.getPosition(first, keyMatrix).getRowNum(); // Will return int of row number
-			int c1 = (int) MatrixLookup.getPosition(first, keyMatrix).getColNum(); // Return int of col number
-			// Second char in digraph
-			int r2 = (int) MatrixLookup.getPosition(second, keyMatrix).getRowNum();
-			int c2 = (int) MatrixLookup.getPosition(second, keyMatrix).getColNum();
-
-			// Have logic for all this in github history...
-			if (r1 == r2) {
-				c1 = (c1 + 4) % 5; 
-				c2 = (c2 + 4) % 5;
-			} else if (c1 == c2) {
-				r1 = (r1 + 4) % 5;
-				r2 = (r2 + 4) % 5;
-			} else {
-		        int temp = c1;
-		        c1 = c2;
-		        c2 = temp;
-		    }
-			
-			decryptedText.append(keyMatrix[r1][c1] +""+ keyMatrix[r2][c2]);
-			return breakPlayfair(keyMatrix, encryptedText, 1 + index, decryptedText);
-		} else {
-			return decryptedText.toString();
-		}
-	}
-	
 	
 }
