@@ -15,7 +15,9 @@ public class nGramHandler {
 	public Map<String, Double> getQuad() throws NumberFormatException, IOException{
 		Map<String, Double> quadgramMap = new HashMap<String, Double>();
 		// Read text file to map adapted from https://stackoverflow.com/a/8886723
-	    BufferedReader in = new BufferedReader(new FileReader("..\\4grams.txt")); // ..\\ to get back to right directory
+	    //BufferedReader in = new BufferedReader(new FileReader("..\\4grams.txt")); // ..\\ to get back to right directory
+	    BufferedReader in = new BufferedReader(new FileReader("4grams.txt")); // ..\\ to get back to right directory
+
 	    String line = "";
 	    while ((line = in.readLine()) != null) {
 	        String[] parts = line.split(" "); // Split the line at the space

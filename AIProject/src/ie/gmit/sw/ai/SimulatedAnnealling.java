@@ -11,7 +11,7 @@ public class SimulatedAnnealling {
 	Key k = new Key();
 	
 	private int temperature;
-	private int transitions = 15000;
+	private int transitions = 1000;
 //	private String key;
 //	private double fitness;
 //	private String decrypted;
@@ -19,7 +19,8 @@ public class SimulatedAnnealling {
 	Map<String, Double> quadgramMap;
 
 	public String decrypt(String encryptedText) throws Exception {	
-		temperature = (int)((10 + 0.087 * (encryptedText.length() - 84)) / 2);
+		temperature = (int)((10 + 0.087 * (encryptedText.length() - 84)));
+		
 		//temperature = 10;
 		setQuadgramMap(ngh.getQuad());
 		String key = k.shuffle(); // Generate random 25 letter key called parent
@@ -45,20 +46,14 @@ public class SimulatedAnnealling {
 				
 				double delta = childFitness - keyFitness;	
 				if(delta > 0) { // If the new key is better
-//					setKey(childKey);
-//					setFitness(childFitness);
-//					setDecrypted(decrypted);
 					key = childKey; // Set the parent to the new key
 					keyFitness = childFitness;
 					decrypted = tmpDcrypt;
 					//System.out.println("New better: " + key + " with score " + keyFitness + ". Decrypted: " + decrypted);
 				} else {
-					double ePow = Math.pow(Math.E, -(delta/i));
+					double ePow = Math.pow(Math.E, (-delta*2/i*2)); // delta/i - will be less likely to accept if temp is low
 					//System.out.println("epow: " + ePow);
-					if(ePow < 10) { 
-//						setKey(childKey);
-//						setFitness(childFitness);
-//						setDecrypted(decrypted);
+					if(ePow > 0.5) { // ePow should be between 0 and 1
 						key = childKey; // Set the parent to the new key
 						keyFitness = childFitness;
 						decrypted = tmpDcrypt;
@@ -74,8 +69,9 @@ public class SimulatedAnnealling {
 					bestDec = tmpDcrypt;
 				}
 			} // End transitions
-			System.out.println("Temp " + i +  ". Current key: " + bestKey + " with score " + bestFitness + ".\nDecrypted: " + bestDec + "\nTime: " + ((System.currentTimeMillis() - start) / 1000.0) + "s \n");	
+			System.out.println("Temp " + i +  ". Current key: " + bestKey + " with score " + bestFitness + ".\nDecrypted: " + bestDec.substring(0, 100) + "..." + "\nTime: " + ((System.currentTimeMillis() - start) / 1000.0) + "s \n");	
 		} // End temp
+		System.out.println("Completed at temp " + temperature + " with " + transitions + " transitions each. Total tests: " + (temperature*transitions) + "\nBest Key: " + bestKey + ", with score: " + bestFitness + ". Decrypted: " + bestDec.substring(0, 100) + "...\n");
 		return decrypted;
 	}
 	
@@ -89,7 +85,8 @@ public class SimulatedAnnealling {
 				if (occurences != null) {
 					// Probability of gram is count of gram divided by total number... this part is definitely right?
 					//System.out.print(Math.log10(occurences / total) + " ");
-					score += Math.log10(occurences / total);
+					//score += Math.log10(occurences)/ Math.log10(total);
+					score += Math.log10(occurences/total);
 				}
 			}
 			return score;

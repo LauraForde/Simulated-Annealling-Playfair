@@ -8,7 +8,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-
 public class CipherBreaker {
 	static PlayfairImpl pf = new PlayfairImpl();
 	static FileHandler fp = new FileHandler();
@@ -19,7 +18,7 @@ public class CipherBreaker {
 	static String filename;
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("Enter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
+		System.out.println("Enter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
 		menu(); // Run the menu method
 	}
 
@@ -30,72 +29,94 @@ public class CipherBreaker {
 		switch (choice) {
 	        case 1:
 	        	primedText = askFile();
-	        	knownKey(primedText);
-	        	break;
+	        	if(primedText.equals("exit")) {
+	        		System.out.println("Enter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
+	        		menu();
+	        		break;
+	        	} else {
+	        		knownKey(primedText); // User wants to decrypt file, execute runProg() method
+	        		break;
+	        	}
 	        case 2:
-	        	runSimulatedAnnealling(); // User wants to decrypt file, execute runProg() method
-	        	break;
+	        	primedText = askFile();
+	        	if(primedText.equals("exit")) {
+	        		System.out.println("\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
+	        		menu();
+	        		break;
+	        	} else {
+	        		runSimulatedAnnealling(primedText); // User wants to decrypt file, execute runProg() method
+	        		break;
+	        	}
 	        case 3:
 	            System.out.println("- Terminated Program -"); // User wants to quit
 	            break;
 	        default:
-	            System.out.println("Invalid option! Please choose an option from the menu below. \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
+        		System.out.println("Invalid option! Please choose an option from the menu below.\n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
 	            menu(); // Handling possibility of user entering invalid option, just call menu() until choice is valid
 	    }
-	
 	}
 	
-	public static void runSimulatedAnnealling() throws Exception {
-		String primedText = askFile();
+	public static void runSimulatedAnnealling(String primedText) throws Exception {
 		String decrypted;
-//
-//		System.out.print("Please note this program could take a long time to find the correct key.\nEnter a time limit in seconds (the program will terminate and output the best key found up to that point).\nEnter 0 if you are happy to let the program run as long as required, up to a 10 minute cut off.\nTime Limit: ");
-//		int timeLimit = input.nextInt();
-
+		long start = System.currentTimeMillis();
+		
 		try {
 			System.out.println("Decrypting... ");
-			decrypted = sa.decrypt(primedText); // Pass true to output the process
+			decrypted = sa.decrypt(primedText);
+			System.out.println("Decrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds.");
 			fp.writeFile(filename, decrypted);
 			
 		} catch (IOException e) {
 			System.out.println("Unable to decrypt. Please choose an option from the menu.");
 		}
-		System.out.println("\nEnter Option: \n1. Decrypt File with Known Key\n2. Decrypt File using Simulated Annealling\n3. Exit program");
+		System.out.println("\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
 		menu();
 	}
 	
 	public static void knownKey(String primedText) throws Exception {
 		String decrypted;
-		System.out.print("Enter key to decrypt with: ");
+		System.out.print("Enter 'M' to return to the menu.\nEnter a 25-letter key to decrypt with: ");
 		String key = input.next(); 
-		key = key.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""); // Replace all non letter chars
-		long start = System.currentTimeMillis();
-		if(key.length() != 25) {
-			System.out.print("Key must be 25 characters in length and contain only letters! ");
-			knownKey(primedText);
+		if(key.equals("m") || key.equals("M")) {
+    		System.out.println("\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
+			menu();
+		} else {
+			key = key.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""); // Replace all non letter chars
+			if(key.length() != 25) {
+				System.out.print("Key must be 25 characters in length and contain only letters! ");
+				knownKey(primedText);
+			}
+			long start = System.currentTimeMillis();
+			decrypted = pf.decryptPF(key, primedText);
+			System.out.println("Decrypted text: " + decrypted.substring(0, 100) + "...");
+			fp.writeFile(filename, decrypted);
+			
+			System.out.println("\nDecrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds. \n\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
+			menu();
 		}
-		decrypted = pf.decryptPF(key, primedText);
-		fp.writeFile(filename, decrypted);
-		
-		System.out.println("\nDecrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds. \n\nEnter Option: \n1. Decrypt File (known key)\n2. Decrypt File (unknown key)\n3. Exit program");
-		//menu();
-	
 	}
 	
 	public static String askFile() {
-		System.out.print("\nPlease enter name of .txt file to decrypt. Make sure the file is in the same directory as this project, e.g. Documents.\nFile name:");
+		System.out.print("\nPlease enter name of .txt file to decrypt. Make sure the file is in the same directory as this project, e.g. Documents.\nEnter 'M' to return to the menu.\nFile name:");
 		filename = input.next();
 		
-		if(!filename.contains(".txt")) { // If the user didn't enter an extension add it on
-			filename ="..\\" + filename + ".txt"; // ..\\ Move 2 dirs back to same folder project is in
+		if(filename.equals("m") || filename.equals("M")) {
+			return "exit";
+		} else {
+			if(!filename.contains(".txt")) { // If the user didn't enter an extension add it on
+				//filename = "..\\" + filename + ".txt"; // ..\ Move 2 dirs back to same folder project is in
+				filename = filename + ".txt"; // ..\ Move 2 dirs back to same folder project is in
+
+			}
+			
+			Path path = FileSystems.getDefault().getPath(filename);
+			//System.out.println("Path: " + path);
+			String contents = pf.primePlainTxt(fp.readFile(path));
+			System.out.println(contents);
+			
+			return contents;
 		}
 		
-		Path path = FileSystems.getDefault().getPath(filename);
-		//System.out.println("Path: " + path);
-		String contents = pf.primePlainTxt(fp.readFile(path));
-		System.out.println(contents);
-		
-		return contents;
 	}
 	
 }
