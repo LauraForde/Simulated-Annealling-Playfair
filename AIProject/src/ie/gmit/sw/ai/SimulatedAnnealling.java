@@ -33,7 +33,6 @@ public class SimulatedAnnealling {
 
 	public String decrypt(String encryptedText) throws Exception {	
 		//temperature = (int)((10 + 0.087 * (encryptedText.length() - 84)));
-		temperature = 20;
 		Random r = new SecureRandom(); // For e^(delta/time) stuff - was using plain Random, SecureRandom actually "more" random - https://stackoverflow.com/a/11052736/7232648
 		
 		setQuadgramMap(ngh.getQuad()); // Get the map from nGramHandler - Set this once here, when decrypt method called from CipherBreak. Could set it in scoreFitness but would be getting the map every single time it scores a new key - not exactly efficient.
@@ -48,10 +47,14 @@ public class SimulatedAnnealling {
 		String tmpDcrypt;
 		double childFitness;
 		
-		System.out.println("Start key: " + parentKey + ", score " + parentFitness + ", decrypt: " + decrypted + "\n");
+		// For breaking out of the loop
+		String lastKey = parentKey;
+		int count = 1; // Not going to count first time key is output
+		
+		System.out.println(" key: " + parentKey + ", score " + parentFitness + ", decrypt: " + decrypted.substring(0, 20) + "...\n");
 		
 		for(int i = temperature; i > 0; i--) { // For each temp down to 0, steps of -1
-			System.out.print((100 - (i * 5))+ "%... \r"); // \r (carriage return) DOES NOT WORK IN ECLIPSE. Should work in command line. Need to test.
+			//System.out.print((100 - (i * 5))+ "%... \r"); // \r (carriage return) DOES NOT WORK IN ECLIPSE. Should work in command line. Need to test.
 			for (int j = transitions; j > 0; j--) {
 				childKey = k.modifyKey(parentKey); // Make small change to parent
 				tmpDcrypt = pf.decryptPF(childKey, encryptedText); // Decrypt with the new key
@@ -71,9 +74,17 @@ public class SimulatedAnnealling {
 				}
 			
 			} // End transitions
+			System.out.println("LK: " + lastKey + ", count: " + count + "\nTemp " + i + ": " + parentKey + ", " + parentFitness + ": " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
+			if (lastKey.equals(parentKey)) {
+				lastKey = parentKey;
+				count++;
+			} else {
+				lastKey = parentKey;
+			}
 		} // End temp
 		Thread.sleep(5); // Was having minor issues with console not being able to keep up with variables, sleeping for 5 ms before outputting final just in case.
 		System.out.println("Completed at temp " + temperature + " with " + transitions + " transitions each. Total tests: " + (temperature*transitions) + "\nBest Key: " + parentKey + ", with score: " + parentFitness + ". Decrypted: " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
+		decrypted = pf.decryptPF(parentKey, encryptedText); //
 		return decrypted;
 	}
 	

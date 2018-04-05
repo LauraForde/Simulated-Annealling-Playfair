@@ -86,9 +86,10 @@ public class CipherBreaker {
 				System.out.print("Key must be 25 characters in length and contain only letters! ");
 				knownKey(primedText);
 			}
+			System.out.println("Decrypting... ");
 			long start = System.currentTimeMillis();
 			decrypted = pf.decryptPF(key, primedText);
-			System.out.println("Decrypted text: " + decrypted.substring(0, 100) + "...");
+			System.out.println("Sample decrypted text: " + decrypted.substring(0, 20) + "...");
 			fp.writeFile(filename, decrypted);
 			
 			System.out.println("\nDecrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds. \n\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
@@ -112,7 +113,7 @@ public class CipherBreaker {
 			Path path = FileSystems.getDefault().getPath(filename);
 			//System.out.println("Path: " + path);
 			String contents = pf.primePlainTxt(fp.readFile(path));
-			System.out.println(contents);
+			//System.out.println(contents);
 			
 			return contents;
 		}
