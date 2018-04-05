@@ -27,7 +27,7 @@ public class SimulatedAnnealling {
 	 */
 	
 	private int temperature = 20;
-	private int transitions = 50000;
+	private int transitions = 40000;
 	
 	// Also tried to speed up process by only using first 400 chars. Doesn't decrypt with any variations from the list above?
 
@@ -49,12 +49,18 @@ public class SimulatedAnnealling {
 		
 		// For breaking out of the loop
 		String lastKey = parentKey;
-		int count = 1; // Not going to count first time key is output
+		int count = 1; // For breaking out of the loop
+		
 		
 		System.out.println(" key: " + parentKey + ", score " + parentFitness + ", decrypt: " + decrypted.substring(0, 20) + "...\n");
 		
 		for(int i = temperature; i > 0; i--) { // For each temp down to 0, steps of -1
 			//System.out.print((100 - (i * 5))+ "%... \r"); // \r (carriage return) DOES NOT WORK IN ECLIPSE. Should work in command line. Need to test.
+			if(count >= 3 && i < 17 || i <=10) { // Give it at least 5 runs (20-16), if keys are same that soon either caught at a maximum or found the key. Exit after 10, won't find if not found by then.
+				System.out.println("Best key found at temp " + (i - 1) + ", exiting Simulated Annealing.");
+				i = 0; // Break out of the loop
+				return pf.decryptPF(parentKey, encryptedText); // Return the text decrypted with the best key
+			}
 			for (int j = transitions; j > 0; j--) {
 				childKey = k.modifyKey(parentKey); // Make small change to parent
 				tmpDcrypt = pf.decryptPF(childKey, encryptedText); // Decrypt with the new key
@@ -74,17 +80,20 @@ public class SimulatedAnnealling {
 				}
 			
 			} // End transitions
-			System.out.println("LK: " + lastKey + ", count: " + count + "\nTemp " + i + ": " + parentKey + ", " + parentFitness + ": " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
-			if (lastKey.equals(parentKey)) {
-				lastKey = parentKey;
+			System.out.print("LK:\t\t" + lastKey);
+			if (parentKey.equals(lastKey)) {
+				System.out.print(", incrementing key, ");
 				count++;
+				lastKey = parentKey;
 			} else {
 				lastKey = parentKey;
 			}
+			System.out.println(", count: " + count + "\nTemp " + i + ":\t" + parentKey + ", " + parentFitness + ": " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
+
 		} // End temp
 		Thread.sleep(5); // Was having minor issues with console not being able to keep up with variables, sleeping for 5 ms before outputting final just in case.
 		System.out.println("Completed at temp " + temperature + " with " + transitions + " transitions each. Total tests: " + (temperature*transitions) + "\nBest Key: " + parentKey + ", with score: " + parentFitness + ". Decrypted: " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
-		decrypted = pf.decryptPF(parentKey, encryptedText); //
+		decrypted = pf.decryptPF(parentKey, encryptedText); // Decrypt the text with the best key, return that.
 		return decrypted;
 	}
 	
