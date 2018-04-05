@@ -1,3 +1,6 @@
+// AI Project 2018 - Break a Playfair Cipher using Simulated Annealing
+// Rebecca Kane G00320698
+
 package ie.gmit.sw.ai;
 
 public class MatrixLookup {
@@ -25,7 +28,7 @@ public class MatrixLookup {
 				}
 			}
 		}
-		return null; // Default return null (not found)
+		return null; // Default return null (i.e. not found)
 	}
 	
 	// Gets for row / col

@@ -1,3 +1,6 @@
+// AI Project 2018 - Break a Playfair Cipher using Simulated Annealing
+// Rebecca Kane G00320698
+
 package ie.gmit.sw.ai;
 
 import java.io.*;
@@ -26,19 +29,15 @@ public class FileHandler {
 	// Write File
 	public void writeFile(String infilename, String decrypted) throws Exception {
 		PrintWriter out;
-		// Using ..\\ to go 2 dirs back (dir containing project, desktop if project is on desktop, etc), need to get rid of ..\\ from the passed in file name too
-		//String outfilename = "..\\Decrypted-" + infilename.replace("..\\", ""); 
-		String outfilename = "Decrypted-" + infilename;//.replace("..\\", ""); 
+		String outfilename = "Decrypted-" + infilename;
 
 		// Don't need to worry about extension for in or outfilename, added to filename in CipherBreaker class
-		//System.out.println("Writing to " + outfilename.replace("..\\", ""));
-		System.out.println("Writing to " + outfilename);//.replace("..\\", ""));
+		System.out.println("Writing to " + outfilename);
 
 		try {
 			out = new PrintWriter(outfilename);
 			out.println(decrypted);
 			out.close();
-			//System.out.println(outfilename.replace("..\\", "") + " saved.");
 			System.out.println(outfilename + " saved.");
 
 		} catch (FileNotFoundException e) {

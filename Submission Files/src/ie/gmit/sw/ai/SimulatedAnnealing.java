@@ -1,3 +1,6 @@
+// AI Project 2018 - Break a Playfair Cipher using Simulated Annealing
+// Rebecca Kane G00320698
+
 package ie.gmit.sw.ai;
 
 import java.io.IOException;
@@ -29,7 +32,7 @@ public class SimulatedAnnealing {
 	 */
 	
 	private int temperature = 20;
-	private int transitions = 50000;
+	private int transitions = 30000;
 	
 	// Also tried to speed up process by only using first 400 chars. Doesn't decrypt with any variations from the list above?
 

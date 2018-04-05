@@ -1,3 +1,6 @@
+// AI Project 2018 - Break a Playfair Cipher using Simulated Annealing
+// Rebecca Kane G00320698
+
 package ie.gmit.sw.ai;
 
 public class PlayfairImpl{
@@ -22,7 +25,7 @@ public class PlayfairImpl{
 		return str.toString();
 	}
 
-	// Commenting out Step 2 because no need to actually save digraphs when the text is just being parsed in twos in the decryptPF method anyway.
+	// Commenting out Step 2 because no need to actually save digraphs when the text is just being parsed in twos in the PlayfairImpl.decryptPF() method anyway.
 	// Leaving it here to show work and thought process.
 	
 	// Step 2 - Break the plain text into digraphs

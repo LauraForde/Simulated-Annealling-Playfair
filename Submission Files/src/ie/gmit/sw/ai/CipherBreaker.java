@@ -1,4 +1,4 @@
-// AI Project 2018 - Break a Playfair Cipher using Simulated Annealling
+// AI Project 2018 - Break a Playfair Cipher using Simulated Annealing
 // Rebecca Kane G00320698
 
 package ie.gmit.sw.ai;
@@ -58,13 +58,13 @@ public class CipherBreaker {
 	
 	public static void runSimulatedAnnealling(String primedText) throws Exception {
 		String decrypted;
-		long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis(); // Start a timer
 		
 		try {
 			System.out.println("Decrypting... ");
-			decrypted = sa.decrypt(primedText);
-			System.out.println("Decrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds.");
-			fp.writeFile(filename, decrypted);
+			decrypted = sa.decrypt(primedText); // Decrypt the text
+			System.out.println("Decrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds."); // Output length of time taken to decrypt
+			fp.writeFile(filename, decrypted); // Write decrypted text to file
 			
 		} catch (IOException e) {
 			System.out.println("Unable to decrypt. Please choose an option from the menu.");
@@ -80,22 +80,22 @@ public class CipherBreaker {
 		String decrypted;
 		System.out.print("Enter 'M' to return to the menu.\nEnter a 25-letter key to decrypt with: ");
 		String key = input.next(); 
-		if(key.equals("m") || key.equals("M")) {
+		if(key.equals("m") || key.equals("M")) { // If the user enters M or m, return to menu
     		System.out.println("\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
 			menu();
 		} else {
 			key = key.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""); // Replace all non letter chars
 			if(key.length() != 25) {
 				System.out.print("Key must be 25 characters in length and contain only letters! ");
-				knownKey(primedText);
+				knownKey(primedText); // Ask the user to enter key until valid
 			}
 			System.out.println("Decrypting... ");
-			long start = System.currentTimeMillis();
-			decrypted = pf.decryptPF(key, primedText);
-			fp.writeFile(filename, decrypted);
+			long start = System.currentTimeMillis(); // Start a timer
+			decrypted = pf.decryptPF(key, primedText); // Decrypt the text
+			fp.writeFile(filename, decrypted); // Write the text to a file
 			
 			System.out.println("\nDecrypted in " + ((System.currentTimeMillis() - start)) + " milliseconds. \n\nEnter Option: \n1. Decrypt File using Known Key\n2. Decrypt File using Simulated Annealing\n3. Exit Program");
-			menu();
+			menu(); // Return to the menu when done
 		}
 	}
 	
@@ -107,7 +107,6 @@ public class CipherBreaker {
 			return "exit";
 		} else {
 			if(!filename.contains(".txt")) { // If the user didn't enter an extension add it on
-				//filename = "..\\" + filename + ".txt"; // ..\ Move 2 dirs back to same folder project is in
 				filename = filename + ".txt"; // ..\ Move 2 dirs back to same folder project is in
 
 			}
