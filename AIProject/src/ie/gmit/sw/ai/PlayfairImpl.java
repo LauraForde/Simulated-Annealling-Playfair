@@ -57,7 +57,7 @@ public class PlayfairImpl{
 			}
 		}
 		StringBuilder humanReadable = new StringBuilder(); 
-		for (index = 0; index < encryptedTxt.length() / 2; index++) { // Start at 0, loop (half the number of characters in the text) times.
+		for (index = 0; index < (encryptedTxt.length() / 2) -2; index++) { // Start at 0, loop (half the number of characters in the text) times.
 			// Note: I had the key implemented as a String at first but using a char array of [5][5] not only makes the process a lot faster,
 			// it makes decryption using keys a lot easier. See here - https://github.com/rebeccabernie/Simulated-Annealling-Playfair/blob/263c8b6fe62ecd091c6808bb4c5087a08561fbdc/AIProject/src/ie/gmit/sw/ai/PlayfairImpl.java
 			// for a historic version of this file, complete with explanations of that version.

@@ -1,48 +1,45 @@
 package ie.gmit.sw.ai;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileHandler {
 		
 	// Read the file - https://stackoverflow.com/a/9524761/7232648
-	public String readFile(Path file) throws FileNotFoundException, UnsupportedEncodingException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-		          new FileInputStream(file.toString()), "US-ASCII"));
-		  try {
-			StringBuilder fileString = new StringBuilder();
-		    int count = 0;
-		    int intch;
-		    while (((intch = br.read()) != -1) && count < 742) {
-		    	fileString.append((char) intch);
-		      count++;
-		    }
-		    br.close();
-		    return fileString.toString();
-		  	} catch (IOException x) {
-				System.out.println("Oops! File not found.");
+	public String readFile(Path file) {
+		String fileString = "";
+		// Adapted from https://docs.oracle.com/javase/tutorial/essential/io/file.html#textfiles
+		Charset charset = Charset.forName("US-ASCII");
+		try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+		    String line = null;
+		    if(file.toFile().length() > 1000) {
+		    	System.out.println("Oops! File too large, please try a smaller file.");
 			    CipherBreaker.askFile();
-		  }
-		  return "Error with file";
+		    }else {
+		    	while ((line = reader.readLine()) != null) {
+			        fileString += line; // Add the current line to the file string
+			    }
+		    }
+		    
+		} catch (IOException e) {
+			System.out.println("Oops! File not found.");
+		    CipherBreaker.askFile();
+		}
+		return fileString;
 	}
 	
 	// Write File
 	public void writeFile(String infilename, String decrypted) {
 		PrintWriter out;
-		// Using ..\\ to go 2 dirs back (dir containing project, desktop if project is on desktop, etc), need to get rid of ..\\ from the passed in file name too
-		//String outfilename = "..\\Decrypted-" + infilename.replace("..\\", ""); 
-		String outfilename = "Decrypted-" + infilename;//.replace("..\\", ""); 
+		String outfilename = "Decrypted-" + infilename;
 
 		// Don't need to worry about extension for in or outfilename, added to filename in CipherBreaker class
-		//System.out.println("Writing to " + outfilename.replace("..\\", ""));
-		System.out.println("Writing to " + outfilename);//.replace("..\\", ""));
-
+		System.out.println("Writing to " + outfilename);
 		try {
 			out = new PrintWriter(outfilename);
 			out.println(decrypted);
@@ -54,5 +51,4 @@ public class FileHandler {
 			System.out.println("Oops! Error writing to file.");
 		}
 	}
-
 }

@@ -3,9 +3,7 @@
 
 package ie.gmit.sw.ai;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -117,16 +115,7 @@ public class CipherBreaker {
 			Path path = FileSystems.getDefault().getPath(filename);
 			//System.out.println("Path: " + path);
 			String contents = "";
-			try {
-				contents = pf.primePlainTxt(fp.readFile(path));
-			} catch (FileNotFoundException e) {
-				System.out.println("Oops! File not found.");
-			    askFile();
-			} catch (UnsupportedEncodingException e) {
-				System.out.println("Oops! Problem with file, please choose another.");
-			    askFile();
-			}
-			//System.out.println(contents);
+			contents = pf.primePlainTxt(fp.readFile(path));
 			
 			return contents;
 		}
