@@ -1,4 +1,4 @@
-Artificial Intelligence Assignment (50%) 2018 - Using Simulated Annealing to Break a Playfair Cipher
+﻿Artificial Intelligence Assignment (50%) 2018 - Using Simulated Annealing to Break a Playfair Cipher
 Rebecca Kane / G00320698
 
 Requirements for the Application  
@@ -28,3 +28,14 @@ Once the user has entered an existing valid file, no further input is required. 
 
 3. Exit Program
 Terminates the program. In order to start the program again, the user must run java –cp ./playfair.jar ie.gmit.sw.ai.CipherBreaker in the command line.
+
+----------------------------------------------------------------------------------------------------
+Known Issues
+
+The application will not always find the perfect key. It may find a perfect key sometimes, but it will often return an almost-perfect key to decrypt text enough for it to be readable. The application rarely returns a bad key.
+
+Running the program a number of times with temperature 20, transitions 30,000 suggested that the application will either find the key within the first 5-7 temps, or not at all. To avoid the user waiting for the full 20 temps to complete, I implemented a break point where
+ - the key hasn't changed for 3 temps and there has been at least 4 temps, OR 
+ - 10 temps have executed
+the simulated annealing process will end and return the best key at that point.
+I had tried reducing the temp to 10, but this impacts the calculations for accepting a worse key during the process.

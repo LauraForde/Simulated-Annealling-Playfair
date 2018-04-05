@@ -58,14 +58,13 @@ public class PlayfairImpl{
 		}
 		StringBuilder humanReadable = new StringBuilder(); 
 		for (index = 0; index < encryptedTxt.length() / 2; index++) { // Start at 0, loop (half the number of characters in the text) times.
-				
 			// Note: I had the key implemented as a String at first but using a char array of [5][5] not only makes the process a lot faster,
 			// it makes decryption using keys a lot easier. See here - https://github.com/rebeccabernie/Simulated-Annealling-Playfair/blob/263c8b6fe62ecd091c6808bb4c5087a08561fbdc/AIProject/src/ie/gmit/sw/ai/PlayfairImpl.java
 			// for a historic version of this file, complete with explanations of that version.
 			
 			// Index works as such: index 0 deals with chars 0 and 1, index 1 deals with chars 1 and 2, so on and so forth.
 			char first = encryptedTxt.charAt(2 * index); // First char in digraph
-			char second = encryptedTxt.charAt(2 * index + 1);  // Second char in digraph
+			char second = encryptedTxt.charAt(2 * (index + 1));  // Second char in digraph
 			
 			// First char in digraph
 			int row1 = (int) MatrixLookup.getPosition(first, keyMatrix).getRowNum(); // Returns row number from MatrixLookup
@@ -89,7 +88,7 @@ public class PlayfairImpl{
 		        col2 = temp;
 		    }
 			humanReadable.append(keyMatrix[row1][col1] +""+ keyMatrix[row2][col2]); // Append the two chars to the humanReadable string builder
-		}
+		}	
 		return humanReadable.toString(); // Return the stringified String Builder
 	}
 	

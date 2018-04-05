@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
 
-public class SimulatedAnnealling {
+public class SimulatedAnnealing {
 	
 	PlayfairImpl pf = new PlayfairImpl();
 	FileHandler fh = new FileHandler();
@@ -22,17 +22,20 @@ public class SimulatedAnnealling {
 	 * Tried temp 7 with 40k, 50k.
 	 * Tried temp 15 with 25k, 30k.
 	 * Tried temp 20, 50k, steps -2.
-	 * Temp 20, 50k transitions only one tested so far that seems to break it. Takes longer than it should though, finds key after
-	 * 2-3 steps down in temp. Need to implement a break case? break-after-x-non-changes? 
+	 * Tried temp 20, 50k, steps -1, works well but a bit slow.
+	 * Temp 20, 40k transitions also works. Temp 20 with 30 works.
+	 * No variations crack the key 100% of the time. Going with 30 simply because it's quicker
+	 * On average 50k takes anywhere from a minute to 2+ minutes to crack, 5 tests of 30k took average 60-100 seconds. Leaving at 30k. 
 	 */
 	
 	private int temperature = 20;
-	private int transitions = 40000;
+	private int transitions = 30000;
 	
 	// Also tried to speed up process by only using first 400 chars. Doesn't decrypt with any variations from the list above?
 
 	public String decrypt(String encryptedText) throws Exception {	
-		//temperature = (int)((10 + 0.087 * (encryptedText.length() - 84)));
+		//temperature = (int)((10 + 0.087 * (encryptedText.length() - 84))); // Suggested best temp
+		
 		Random r = new SecureRandom(); // For e^(delta/time) stuff - was using plain Random, SecureRandom actually "more" random - https://stackoverflow.com/a/11052736/7232648
 		
 		setQuadgramMap(ngh.getQuad()); // Get the map from nGramHandler - Set this once here, when decrypt method called from CipherBreak. Could set it in scoreFitness but would be getting the map every single time it scores a new key - not exactly efficient.
@@ -40,6 +43,7 @@ public class SimulatedAnnealling {
 		// Parent stuff
 		String parentKey = k.shuffle(); // Generate random 25 letter key called parent
 		String decrypted =  pf.decryptPF(parentKey, encryptedText); // Decrypt with that key
+		System.out.println("SA text: " + decrypted);
 		double parentFitness = scoreFitness(decrypted); // Score the fitness of the key
 		
 		// Child key stuff
@@ -51,16 +55,21 @@ public class SimulatedAnnealling {
 		String lastKey = parentKey;
 		int count = 1; // For breaking out of the loop
 		
-		
-		System.out.println(" key: " + parentKey + ", score " + parentFitness + ", decrypt: " + decrypted.substring(0, 20) + "...\n");
+		int percent = 0;
 		
 		for(int i = temperature; i > 0; i--) { // For each temp down to 0, steps of -1
-			//System.out.print((100 - (i * 5))+ "%... \r"); // \r (carriage return) DOES NOT WORK IN ECLIPSE. Should work in command line. Need to test.
-			if(count >= 3 && i < 17 || i <=10) { // Give it at least 5 runs (20-16), if keys are same that soon either caught at a maximum or found the key. Exit after 10, won't find if not found by then.
-				System.out.println("Best key found at temp " + (i - 1) + ", exiting Simulated Annealing.");
+			System.out.print("\t" + (percent * 10)+ "%... \r"); // \r (carriage return) DOES NOT WORK IN ECLIPSE. Should work in command line. Need to test.
+			percent++;
+			// Give it at least 4 runs (20-16), if keys are same that soon either caught at a maximum or found the key.
+			// Exit after 10, won't find it if not found by then (based on all runs, has always either found key before 10-15 (often as soon as 19) or not at all).
+			if(count >= 3 && i < 17 || i <=10) {
+				System.out.print("100%... \r");
+				Thread.sleep(5); // Was having issues with console not being able to keep up with variables, sleeping for 5ms before output just in case
+				System.out.println("Best key found after " + (20 - i) + " iterations with " + transitions + " transitions each. Total tests: " + ((temperature - i)*transitions) + "\nBest Key: " + parentKey + ", with score: " + parentFitness /*+ ". Decrypted: " + pf.decryptPF(parentKey, encryptedText).substring(0, 20)*/ + "...\nExiting Simulated Annealing.");
 				i = 0; // Break out of the loop
 				return pf.decryptPF(parentKey, encryptedText); // Return the text decrypted with the best key
-			}
+			} // End if count, break
+			
 			for (int j = transitions; j > 0; j--) {
 				childKey = k.modifyKey(parentKey); // Make small change to parent
 				tmpDcrypt = pf.decryptPF(childKey, encryptedText); // Decrypt with the new key
@@ -80,21 +89,20 @@ public class SimulatedAnnealling {
 				}
 			
 			} // End transitions
-			System.out.print("LK:\t\t" + lastKey);
+			
+			// Tracking repetition of a key - if the parent key and previous key are the same (.equals for same content as opposed to == for same object)
 			if (parentKey.equals(lastKey)) {
-				System.out.print(", incrementing key, ");
-				count++;
-				lastKey = parentKey;
-			} else {
-				lastKey = parentKey;
+				count++; // Add to the count
+				lastKey = parentKey; // Set last key
+			} else { // Parent and last aren't the same
+				lastKey = parentKey; // Set last key
+				count = 1; // Revert back to 1 (only counting 2, 3, etc in a row)
 			}
-			System.out.println(", count: " + count + "\nTemp " + i + ":\t" + parentKey + ", " + parentFitness + ": " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
 
 		} // End temp
-		Thread.sleep(5); // Was having minor issues with console not being able to keep up with variables, sleeping for 5 ms before outputting final just in case.
-		System.out.println("Completed at temp " + temperature + " with " + transitions + " transitions each. Total tests: " + (temperature*transitions) + "\nBest Key: " + parentKey + ", with score: " + parentFitness + ". Decrypted: " + pf.decryptPF(parentKey, encryptedText).substring(0, 20) + "...");
+		
 		decrypted = pf.decryptPF(parentKey, encryptedText); // Decrypt the text with the best key, return that.
-		return decrypted;
+		return decrypted; // Default return, should never reach this point (due to break after 10 temps) but just in case
 	}
 	
 	// Score fitness
@@ -105,9 +113,9 @@ public class SimulatedAnnealling {
 		for(int i = 0; i < decrypted.length() - 4; i++) { // For each char in the decrypted text
 			Double occurrences = quadgramMap.get(decrypted.substring(i, i+4)); // Get the number of occurrences of the current gram (chars i to i+4) of decrypted text
 			if(occurrences == null) { // If the gram has no occurrences in 4grams.txt
-				occurrences = 1.0; // Set it to one occurrence (for the sake of occurrences / total -> can't divide by 0)
+				occurrences = 1.0; // Set it to one occurrence (for the sake of occurrences / total -> can't divide by 0 or null)
 			}
-			score += Math.log10((double) occurrences / total); // Add the probability (occurrences / total)
+			score += Math.log10((double) occurrences / total); // Add the probability (occurrences / total, cast to double to preserve accuracy)
 		}
 		return score;
 	}

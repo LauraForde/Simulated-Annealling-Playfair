@@ -3,7 +3,9 @@
 
 package ie.gmit.sw.ai;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -11,7 +13,7 @@ import java.util.Scanner;
 public class CipherBreaker {
 	static PlayfairImpl pf = new PlayfairImpl();
 	static FileHandler fp = new FileHandler();
-	static SimulatedAnnealling sa = new SimulatedAnnealling();
+	static SimulatedAnnealing sa = new SimulatedAnnealing();
 	static nGramHandler ngh = new nGramHandler();
 	
 	static Scanner input = new Scanner(System.in);
@@ -59,11 +61,13 @@ public class CipherBreaker {
 	public static void runSimulatedAnnealling(String primedText) throws Exception {
 		String decrypted;
 		long start = System.currentTimeMillis();
-		
+		if (primedText.length() > 742) { // Current SA algorithm works with exam tips, which is 742 characters
+			primedText = primedText.substring(0, 742);
+		}
 		try {
 			System.out.println("Decrypting... ");
 			decrypted = sa.decrypt(primedText);
-			System.out.println("Decrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds.");
+			System.out.println("Sample decrypted text: " /*+ decrypted.substring(0, 20)*/ + "...\nDecrypted in " + ((System.currentTimeMillis() - start) / 1000.0) + " seconds.");
 			fp.writeFile(filename, decrypted);
 			
 		} catch (IOException e) {
@@ -112,7 +116,16 @@ public class CipherBreaker {
 			
 			Path path = FileSystems.getDefault().getPath(filename);
 			//System.out.println("Path: " + path);
-			String contents = pf.primePlainTxt(fp.readFile(path));
+			String contents = "";
+			try {
+				contents = pf.primePlainTxt(fp.readFile(path));
+			} catch (FileNotFoundException e) {
+				System.out.println("Oops! File not found.");
+			    askFile();
+			} catch (UnsupportedEncodingException e) {
+				System.out.println("Oops! Problem with file, please choose another.");
+			    askFile();
+			}
 			//System.out.println(contents);
 			
 			return contents;

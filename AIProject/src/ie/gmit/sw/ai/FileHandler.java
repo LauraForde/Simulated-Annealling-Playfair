@@ -1,28 +1,35 @@
 package ie.gmit.sw.ai;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 
 public class FileHandler {
 		
-	// Read the file
-	public String readFile(Path file) {
-		String fileString = "";
-		
-		// Adapted from https://docs.oracle.com/javase/tutorial/essential/io/file.html#textfiles
-		Charset charset = Charset.forName("US-ASCII");
-		try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
-		    String line = null;
-		    while ((line = reader.readLine()) != null) {
-		        //System.out.println(line);
-		        fileString += line; // Add the current line to the file string
+	// Read the file - https://stackoverflow.com/a/9524761/7232648
+	public String readFile(Path file) throws FileNotFoundException, UnsupportedEncodingException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+		          new FileInputStream(file.toString()), "US-ASCII"));
+		  try {
+			StringBuilder fileString = new StringBuilder();
+		    int count = 0;
+		    int intch;
+		    while (((intch = br.read()) != -1) && count < 742) {
+		    	fileString.append((char) intch);
+		      count++;
 		    }
-		} catch (IOException x) {
-			System.out.println("Oops! File not found.");
-		    CipherBreaker.askFile();
-		}
-		return fileString;
+		    br.close();
+		    return fileString.toString();
+		  	} catch (IOException x) {
+				System.out.println("Oops! File not found.");
+			    CipherBreaker.askFile();
+		  }
+		  return "Error with file";
 	}
 	
 	// Write File
@@ -40,7 +47,7 @@ public class FileHandler {
 			out = new PrintWriter(outfilename);
 			out.println(decrypted);
 			out.close();
-			//System.out.println(outfilename.replace("..\\", "") + " saved.");
+			System.out.println(decrypted);
 			System.out.println(outfilename + " saved.");
 
 		} catch (FileNotFoundException e) {
